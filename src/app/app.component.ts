@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
+import { AuthService } from './services/authService/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,16 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+  constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit() {
+    if(this.authService.isLoggedIn()) {
+      this.router.navigate(['/main'])
+      console.log('App component logged')
+    } else {
+      console.log('App component NOT logged')
+      this.router.navigate([''])
+    }
+  }
   title = 'App';
 }

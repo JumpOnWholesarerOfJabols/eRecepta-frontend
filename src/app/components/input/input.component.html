@@ -1,0 +1,12 @@
+<mat-form-field class="w-full">
+  <mat-label>{{ label }}</mat-label>
+  @if (type != InputTypes.SELECT) {
+  <input matInput [type]="type" [formControl]="control" />
+} @else {
+<mat-select [formControl]="control">
+  @for (selectV of selectValues; track selectV) {
+    <mat-option [value]="selectV">{{selectV}}</mat-option>
+  }
+</mat-select>
+}
+</mat-form-field>
