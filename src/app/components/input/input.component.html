@@ -1,12 +1,28 @@
-<mat-form-field class="w-full">
-  <mat-label>{{ label }}</mat-label>
-  @if (type != InputTypes.SELECT) {
-  <input matInput [type]="type" [formControl]="control" />
-} @else {
-<mat-select [formControl]="control">
-  @for (selectV of selectValues; track selectV) {
-    <mat-option [value]="selectV">{{selectV}}</mat-option>
-  }
-</mat-select>
-}
-</mat-form-field>
+<div class="flex items-center">
+  <mat-form-field class="w-full">
+    <mat-label>{{ label }}</mat-label>
+    
+    @if (type === InputTypes.SELECT) {
+      <mat-select [formControl]="control">
+        @for (selectV of selectValues; track selectV) {
+        <mat-option [value]="selectV">{{selectV}}</mat-option>
+        }
+      </mat-select>
+    }
+    
+    @if (type === InputTypes.PASSWORD) {
+      <input matInput [type]="showPassword ? 'text' : 'password'" [formControl]="control" />
+    }
+    
+    @if (type === InputTypes.PASSWORD) {
+      <button class="pr-2" mat-icon-button matSuffix type="button" (click)="showPassword = !showPassword"
+        [attr.aria-label]="'Show password'" [attr.aria-pressed]="showPassword">
+        <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+    }
+    
+    @if (type !== InputTypes.SELECT && type !== InputTypes.PASSWORD) {
+      <input matInput [type]="type" [formControl]="control" />
+    }
+  </mat-form-field>
+</div>

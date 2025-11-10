@@ -1,11 +1,15 @@
 export interface UserData {
-    name: string;
-    surname: string;
-    email: string;
-    password: string;
-    pesel: string;
-    phoneNumber: string;
-    gender: string;
-    birthday: string;
-    acceptPolicy: boolean;
+    email: string
+    pesel: string
+    firstName: string
+    lastName: string
+    phoneNumber: string
+    gender: Gender | null
+    dateOfBirth: string
+    password: string
+}
+
+export enum Gender {
+    MALE = 'MALE',
+    FEMALE = 'FEMALE'
 }

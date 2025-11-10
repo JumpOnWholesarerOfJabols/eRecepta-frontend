@@ -6,9 +6,9 @@
     <div class="grow">
         <form class="flex flex-col" [formGroup]="registerForm" (ngSubmit)="register()">
             <app-input label="Name" [type]="InputTypes.TEXT"
-                [control]="registerForm.controls.name"></app-input>
+                [control]="registerForm.controls.firstName"></app-input>
             <app-input label="Surname" [type]="InputTypes.TEXT"
-                [control]="registerForm.controls.surname"></app-input>
+                [control]="registerForm.controls.lastName"></app-input>
             <app-input label="Email" [type]="InputTypes.EMAIL"
                 [control]="registerForm.controls.email"></app-input>
             <app-input label="Password" [type]="InputTypes.PASSWORD"
@@ -20,7 +20,7 @@
             <app-input label="Gender" [type]="InputTypes.SELECT" [selectValues]="genderSelect"
                 [control]="registerForm.controls.gender"></app-input>
             <app-input label="Birthday" [type]="InputTypes.DATE"
-                [control]="registerForm.controls.birthday"></app-input>
+                [control]="registerForm.controls.dateOfBirth"></app-input>
             <div class="flex items-center text-sm">
                 <mat-checkbox [formControl]="registerForm.controls.acceptPolicy">
                     <span [class.text-red-500]="registerForm.controls.acceptPolicy.invalid && registerForm.controls.acceptPolicy.touched">Accept</span> 

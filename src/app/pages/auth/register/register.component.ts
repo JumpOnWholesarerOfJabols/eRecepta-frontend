@@ -4,10 +4,10 @@ import { InputTypes } from '../../../utils/InputTypes';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReactiveFormsModule, Validators, NonNullableFormBuilder } from '@angular/forms';
-import { RouterLink } from "@angular/router";
-import { RegisterService } from '../../../services/registerService/register.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { UserData } from '../../../utils/UserData';
+import { Router, RouterLink } from "@angular/router";
+import { RegisterService } from '../../../services/authServices/registerService/register.service';
+import { Gender, UserData } from '../../../utils/UserData';
+import { SnackbarService } from '../../../services/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-register',
@@ -23,54 +23,58 @@ import { UserData } from '../../../utils/UserData';
 })
 export class RegisterComponent {
   InputTypes = InputTypes;
-  genderSelect = ['Male', 'Female'];
+  genderSelect = [Gender.MALE, Gender.FEMALE];
   registerForm;
 
 
   constructor(
     private fb: NonNullableFormBuilder,
     private registerService: RegisterService,
-    private snackBar: MatSnackBar
+    private snackBar: SnackbarService,
+    private router : Router
   ) {
     this.registerForm = this.fb.group({
-      name: ['' /*, [Validators.required, Validators.minLength(2)]*/],
-      surname: ['' /*, [Validators.required, Validators.minLength(2)]*/],
-      email: ['' /*, [Validators.required, Validators.email]*/],
-      password: ['' /*, [Validators.required, Validators.minLength(6)]*/],
-      pesel: ['' /*, [Validators.required, Validators.pattern(/^\d{11}$/)]*/],
-      phoneNumber: ['' /*, [Validators.required, Validators.pattern(/^\d{9,15}$/)]*/],
-      gender: ['' /*, Validators.required*/],
-      birthday: ['' /*, Validators.required*/],
-      acceptPolicy: [false /*, Validators.requiredTrue*/]
+      firstName: ['' , [Validators.required, Validators.minLength(2)]],
+      lastName: ['' , [Validators.required, Validators.minLength(2)]],
+      email: ['' , [Validators.required, Validators.email]],
+      password: ['' , [Validators.required, Validators.minLength(8)]],
+      pesel: ['' , [Validators.required, Validators.pattern(/^\d{11}$/)]],
+      phoneNumber: ['' , [Validators.required, Validators.pattern(/^\d{9,15}$/)]],
+      gender: [null , Validators.required],
+      dateOfBirth: ['' , Validators.required],
+      acceptPolicy: [false , Validators.requiredTrue]
     });
 
   }
 
   register() {
     this.registerForm.markAllAsTouched();
+
     if (this.registerForm.valid) {
-      const newUserData: UserData = this.registerForm.getRawValue();
-      console.log('raw: ', newUserData);
+      const {acceptPolicy, ...newUserData} = this.registerForm.getRawValue();
+      console.log('raw: ', JSON.stringify(newUserData));
       this.registerService.registerUser(newUserData).subscribe({
         next: (value) => {
-          console.log(value);
-          this.openSnackBar('Registration successful!', 'Close');
+          this.snackBar.openSnackBar('Registration successful!');
+          this.registerService.sendVerificationCode(newUserData.email).subscribe({
+            next: (value) => {
+              this.snackBar.openSnackBar('We sent you a verification code on your email!');
+              this.router.navigate(['verifyAccount']);
+            },
+            error: (err) => {
+              this.snackBar.openSnackBar(err.message);
+            }
+          })
         },
         error: (err) => {
-          this.openSnackBar('Registration failder! Try again later', 'Close');
+          this.snackBar.openSnackBar('Error while signing up. Try again later');
           console.log(err);
         },
       })
     } else {
-      this.openSnackBar('You data is invalid!', 'Close');
+      this.snackBar.openSnackBar('You data is invalid!');
     }
   }
 
-  openSnackBar(message: string, action: string) {
-    this.snackBar.open(message, action, {
-      duration: 2000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-    });
-  }
+  
 }
