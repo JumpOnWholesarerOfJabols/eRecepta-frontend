@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
-import { LoginData } from '../../utils/LoginData';
+import { LoginData } from '../../../utils/CredentialsData';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +13,10 @@ export class LoginService {
   login(loginData: LoginData): Observable<any> {
     return this.apollo.mutate({
       mutation: gql`
-        query LoginUser($input: LoginInput!) {
+        mutation LoginUser($input: LoginInput!) {
           login(input: $input) {
             token
+            expiresAt
           }
         }
       `,

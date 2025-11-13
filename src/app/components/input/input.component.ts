@@ -6,6 +6,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputTypes } from '../../utils/InputTypes';
 import { FormControl } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-input',
@@ -15,7 +16,9 @@ import { FormControl } from '@angular/forms';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    MatSelectModule],
+    MatSelectModule,
+    MatIcon
+  ],
   templateUrl: './input.component.html',
   styleUrl: './input.component.css'
 })
@@ -28,4 +31,5 @@ export class InputComponent {
   @Input() selectValues: string[] = [];
 
   inputValue = '';
+  showPassword = false;
 }
