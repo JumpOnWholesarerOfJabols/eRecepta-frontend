@@ -7,3 +7,19 @@
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+/* CUSTOM SNACKBAR STYLES */
+.error-snackbar .mdc-snackbar__surface {
+  background-color: #eb2e2e !important;
+}
+
+.error-snackbar .mdc-snackbar__label {
+  color: white !important;
+  font-weight: 500 !important;
+}
+
+.error-snackbar .mat-mdc-button {
+  color: white !important;
+}
+

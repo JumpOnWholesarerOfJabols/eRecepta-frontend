@@ -4,9 +4,9 @@ import { InputComponent } from '../../../components/input/input.component';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { InputTypes } from '../../../utils/InputTypes';
-import { ForgotPasswordService } from '../../../services/authServices/forgotPassword/forgot-password.service';
+import { ForgotPasswordService } from '../../../services/authServices/forgotPasswordService/forgot-password.service';
 import { MatIconModule } from '@angular/material/icon';
-import { SnackbarService } from '../../../services/snackbar/snackbar.service';
+import { SnackbarService } from '../../../services/snackbarService/snackbar.service';
 
 @Component({
   selector: 'app-set-new-password',
@@ -50,13 +50,18 @@ export class SetNewPasswordComponent {
   set() {
     if (this.setForm.valid) {
       this.forgotPasswordService.reset(this.setForm.getRawValue()).subscribe({
-        next: (value) => {
-          this.snackBar.openSnackBar(value);
-          this.router.navigate([''])
+        next: (result) => {
+          if (result.data) {
+            this.snackBar.openSnackBar('New password set!');
+            this.router.navigate([''])
+          } else {
+            //handler
+          }
+
         },
         error: (err) => {
           console.log(err)
-          this.snackBar.openSnackBar('Failed to set new password');
+          this.snackBar.openErrorSnackBar('Failed to set new password');
         }
       })
     }

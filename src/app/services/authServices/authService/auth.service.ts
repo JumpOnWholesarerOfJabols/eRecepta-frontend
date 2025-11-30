@@ -24,6 +24,8 @@ export class AuthService {
   // }
 
   isLoggedIn(): boolean {
+    console.log("get tk:" + this.getToken())
+    console.log("get tk u:" + !!this.getToken())
     return !!this.getToken();
   }
 
