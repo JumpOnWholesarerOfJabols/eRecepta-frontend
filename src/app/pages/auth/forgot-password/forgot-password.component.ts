@@ -4,8 +4,8 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { MatButtonModule } from '@angular/material/button';
 import { InputTypes } from '../../../utils/InputTypes';
 import { Router, RouterLink } from '@angular/router';
-import { ForgotPasswordService } from '../../../services/authServices/forgotPassword/forgot-password.service';
-import { SnackbarService } from '../../../services/snackbar/snackbar.service';
+import { ForgotPasswordService } from '../../../services/authServices/forgotPasswordService/forgot-password.service';
+import { SnackbarService } from '../../../services/snackbarService/snackbar.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -37,16 +37,18 @@ export class ForgotPasswordComponent {
       //Cannot be null because of Validator
       const login = this.resetForm.value.login!;
       this.forgotPasswordService.resetRequest(login).subscribe({
-        next: (value) => {
-          console.log('res');
-          this.router.navigate(
+        next: (result) => {
+          if(result.data) {
+            this.router.navigate(
             ['setNewPassword', { queryParams: { login: login } }
             ])
+          } else {
+            // Apollo handler
+          }
+          
         },
         error: (err) => {
-          console.log('res ERROR', err);
-          this.snackBar.openSnackBar('Failed to reset password. Try again later');
-          console.log(err);
+          this.snackBar.openSnackBar('Network error. Check your connection');
         },
       })
     }

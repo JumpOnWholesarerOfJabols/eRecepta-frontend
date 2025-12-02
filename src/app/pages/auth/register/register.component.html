@@ -21,9 +21,11 @@
                 [control]="registerForm.controls.gender"></app-input>
             <app-input label="Birthday" [type]="InputTypes.DATE"
                 [control]="registerForm.controls.dateOfBirth"></app-input>
-            <div class="flex items-center text-sm">
-                <mat-checkbox [formControl]="registerForm.controls.acceptPolicy">
-                    <span [class.text-red-500]="registerForm.controls.acceptPolicy.invalid && registerForm.controls.acceptPolicy.touched">Accept</span> 
+            <div class="flex items-center text-sm" 
+                [ngClass]="{'invalid': registerForm.controls.acceptPolicy.invalid && registerForm.controls.acceptPolicy.touched}">
+                <mat-checkbox [formControl]="registerForm.controls.acceptPolicy" 
+                    [ngClass]="{'checkbox-invalid': registerForm.controls.acceptPolicy.invalid && registerForm.controls.acceptPolicy.touched}">
+                    <span [ngClass]="{'text-invalid': registerForm.controls.acceptPolicy.invalid && registerForm.controls.acceptPolicy.touched}">Accept</span> 
                 </mat-checkbox>
                 <a class="hover:underline hover:cursor-pointer text-blue-500 ps-1" routerLink="/policy"> Policy</a>
             </div>

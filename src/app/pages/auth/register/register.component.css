@@ -1,0 +1,13 @@
+/* Style the checkbox border when invalid */
+.checkbox-invalid ::ng-deep .mdc-checkbox__native-control {
+  border-color: #f44336 !important;
+}
+
+.checkbox-invalid ::ng-deep .mdc-checkbox__background {
+  border-color: #f44336 !important;
+}
+
+/* Style the Accept text when invalid */
+.text-invalid {
+  color: #f44336 !important;
+}

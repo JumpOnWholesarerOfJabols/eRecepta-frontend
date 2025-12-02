@@ -7,7 +7,7 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from "@angular/router";
 import { LoginService } from '../../../services/authServices/loginService/login.service';
 import { AuthService } from '../../../services/authServices/authService/auth.service';
-import { SnackbarService } from '../../../services/snackbar/snackbar.service';
+import { SnackbarService } from '../../../services/snackbarService/snackbar.service';
 
 @Component({
   selector: 'app-login',
@@ -45,23 +45,18 @@ export class LoginComponent {
     if(this.loginForm.valid) {
       const { rememberMe, ...loginData } = this.loginForm.getRawValue();
       this.loginService.login(loginData).subscribe({
-        next: (value) => {
-          console.log("logged : ", value);
+        next: (result) => {
 
-          this.authService.setToken(rememberMe, value.token);
-          this.router.navigate(['main'])
+        if (result.data) {
+          this.authService.setToken(rememberMe, result.data.token);
+          this.router.navigate(['main']);
+        } else {
+          this.loginForm.controls.password.setValue('');
+        }
           
         },
         error: (err) => {
-          console.log("blad przy logowaniu", err.message);
-          this.snackBar.openSnackBar('Error while logging in', 5000);
-
-          if(err.errors[0].extensions.errorCode === 'AccountVerificationException') {
-            this.router.navigate(
-              ['verifyAccount'], 
-              {queryParams: {login: loginData.login}}
-            )
-          }
+          
         }
       })
     } else {

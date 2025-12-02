@@ -5,7 +5,7 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
 import { InputComponent } from '../../../components/input/input.component';
 import { MatButtonModule } from '@angular/material/button';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { SnackbarService } from '../../../services/snackbar/snackbar.service';
+import { SnackbarService } from '../../../services/snackbarService/snackbar.service';
 
 @Component({
   selector: 'app-verify-account',
@@ -47,9 +47,13 @@ export class VerifyAccountComponent {
   verify() {
     if (this.verifyForm.valid) {
       this.registerService.verifyUser(this.verifyForm.getRawValue()).subscribe({
-        next: (value) => {
-          this.snackBar.openSnackBar(value);
-          this.router.navigate([''])
+        next: (result) => {
+          if(result.data) {
+            this.snackBar.openSnackBar('Account verified!');
+            this.router.navigate([''])
+          } else {
+            //handler
+          }
         },
         error: (err) => {
           console.log(err)

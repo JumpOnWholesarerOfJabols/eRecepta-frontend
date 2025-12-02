@@ -1,30 +1,24 @@
-import { ApplicationConfig, inject, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
-import { Apollo, APOLLO_OPTIONS, provideApollo } from 'apollo-angular';
-import { HttpLink } from 'apollo-angular/http';
-import { InMemoryCache } from '@apollo/client/core';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideApollo } from 'apollo-angular';
+import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { routes } from './app.routes';
+import { apolloConfig } from './core/graphql/apollo.config';
+import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
 
 export const appConfig: ApplicationConfig = {
-  providers: 
-  [
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter (
-      routes,
-      withInMemoryScrolling({
-        scrollPositionRestoration: "top",
-      })
-    ),
-    
-    provideHttpClient(),
-    provideApollo(() => {
-      const httpLink = inject(HttpLink);
- 
-      return {
-        link: httpLink.create({ uri: 'http://localhost:12000/graphql' }),
-        cache: new InMemoryCache(),
-      };
-    }),
-  ]
+  providers:
+    [
+      provideZoneChangeDetection({ eventCoalescing: true }),
+      provideRouter(
+        routes,
+        withInMemoryScrolling({
+          scrollPositionRestoration: "top",
+        })
+      ),
+
+      provideHttpClient(withInterceptorsFromDi()),
+      { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
+      provideApollo(apolloConfig),
+    ]
 };
