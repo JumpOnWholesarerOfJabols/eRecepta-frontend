@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
-import { RegisterComponent } from './pages/auth/register/register.component';
-import { LoginComponent } from './pages/auth/login/login.component';
-import { HomeComponent } from './pages/home/home.component';
-import { PolicyComponent } from './pages/auth/policy/policy.component';
-import { MainComponent } from './pages/mainPanel/main/main.component';
-import { AuthGuardService } from './guards/authGuard/auth-guard.service';
-import { ForgotPasswordComponent } from './pages/auth/forgot-password/forgot-password.component';
-import { VerifyAccountComponent } from './pages/auth/verify-account/verify-account.component';
-import { SetNewPasswordComponent } from './pages/auth/set-new-password/set-new-password.component';
+import { RegisterComponent } from './features/auth/register/register.component';
+import { LoginComponent } from './features/auth/login/login.component';
+import { HomeComponent } from './features/home/home.component';
+import { PolicyComponent } from './features/auth/policy/policy.component';
+import { MainComponent } from './features/mainPanel/main/main.component';
+import { AuthGuardService } from './core/auth/guards/authGuard/auth-guard.service';
+import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
+import { VerifyAccountComponent } from './features/auth/verify-account/verify-account.component';
+import { SetNewPasswordComponent } from './features/auth/set-new-password/set-new-password.component';
 
 export const routes: Routes = [
     { 

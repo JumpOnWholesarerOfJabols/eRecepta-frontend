@@ -5,14 +5,23 @@ export interface GraphQLErrorExtensions {
   [key: string]: any;
 }
 
-export interface GraphQLError {
+export interface GraphQLErrorList {
   message: string;
   extensions: GraphQLErrorExtensions;
-  path?: (string | number)[];  // Ścieżka w query (np. ["login"])
+  path?: (string | number)[];
   locations?: Array<{ line: number; column: number }>;
 }
 
-export interface GraphQLResponse<T = any> {
+export interface GraphQLError<T = any> {
   data?: T;
-  errors?: GraphQLError[];
+  errors?: GraphQLErrorList[];
+  extension: any;
+  name: String;
+  message: String;
+}
+
+export interface MutationResponse<T = any> {
+  data: T;
+  errors: GraphQLError[];
+  loading: boolean;
 }

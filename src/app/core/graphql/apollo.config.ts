@@ -5,9 +5,9 @@ import { HttpLink } from 'apollo-angular/http';
 import { InMemoryCache, ApolloLink } from '@apollo/client/core';
 import { SetContextLink } from '@apollo/client/link/context';
 import { HttpHeaders } from '@angular/common/http';
-import { AuthService } from '../../services/authServices/authService/auth.service';
-import { ErrorLinkFactory } from './apollo-error.link';
-import { LoadingLinkFactory } from './loading.link';
+import { AuthService } from '../auth/services/authService/auth.service';
+import { ErrorLinkFactory } from './apollo-ErrorLinkFactory';
+import { LoadingLinkFactory } from './apollo-LoadingLinkFactory';
 
 const url = 'http://localhost:12000/graphql';
 
