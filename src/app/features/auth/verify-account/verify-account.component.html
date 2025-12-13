@@ -1,0 +1,28 @@
+<div class="flex flex-col h-full">
+  <div class="mb-8">
+    <h2 class="text-3xl font-semibold">Verify your account</h2>
+    <p class="text-xl">Please enter your details</p>
+    <p>You can find your code in your email inbox</p>
+  </div>
+  <div class="grow">
+    <form class="flex flex-col" [formGroup]="verifyForm" (ngSubmit)="verify()">
+      <app-input class="w-full text-2xl" label="Email or Pesel" [type]="InputTypes.LOGIN"
+        [control]="verifyForm.controls.login"></app-input>
+      <app-input label="Verification code" 
+        [type]="InputTypes.TEXT" 
+        [control]="verifyForm.controls.code"
+        [upperCaseText]="true"
+        >
+      </app-input>
+
+
+      <div class="text-right">
+          <a class="hover:underline hover:cursor-pointer" (click)="sendVerificationCodeAgain()">Send code again</a>
+        </div>
+      <button mat-flat-button type="submit">
+        <span class="text-xl">Verify</span>
+      </button>
+    </form>
+  </div>
+  <a class="text-sm hover:underline hover:cursor-pointer self-center pt-2" routerLink="">Sign in</a>
+</div>

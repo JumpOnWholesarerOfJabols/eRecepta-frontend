@@ -1,36 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { SnackbarService } from '../../../services/snackbarService/snackbar.service';
-
+import { SnackbarService } from '../snackbarService/snackbar.service';
+import { ERROR_MESSAGES, DEFAULT_ERROR_MESSAGE } from '../../constraints/error-message.const';
 @Injectable({
   providedIn: 'root'
 })
 export class ErrorHandlerService {
-
-  private readonly errorMessages: { [key: string]: string } = {
-    // User errors
-    'UserDoesNotExistException': 'User does not exist in the system',
-    'UserAlreadyExistsException': 'User with this email address or PESEL number already exists',
-    'InvalidCredentialsException': 'Invalid email, PESEL or password',
-    'AccountVerificationException': 'Account has not been verified. Check your email inbox.',
-
-    // Code verification errors
-    'CodeDoesNotExistException': 'The verification code provided is invalid',
-    'CodeExpiredException': 'Verification code has expired. Generate a new one.',
-
-    // Validation errors
-    'MultiFieldValidationException': 'Form contains errors',
-
-    // Generic errors
-    'UNAUTHORIZED': 'You do not have permission to perform this operation',
-    'NOT_FOUND': 'Resource was not found',
-    'BAD_REQUEST': 'Invalid request',
-    'INTERNAL_ERROR': 'Server error occurred. Please try again later.'
-  };
-
   constructor(
-    private snackBar: SnackbarService,
-    private router: Router
+    private snackBar: SnackbarService
   ) { };
 
   handleGraphQLError(
@@ -72,22 +49,21 @@ export class ErrorHandlerService {
   }
 
   private getErrorMessage(errorCode: string, backendMessage?: string): string {
-    if (this.errorMessages[errorCode]) {
-      return this.errorMessages[errorCode];
+    if (ERROR_MESSAGES[errorCode]) {
+      return ERROR_MESSAGES[errorCode];
     }
     
     if (backendMessage) {
       return backendMessage;
     }
 
-    return 'An unexpected error occurred';
+    return DEFAULT_ERROR_MESSAGE;
   }
 
    private handleSpecificErrors(errorCode: string): void {
     switch (errorCode) {
       case 'AccountVerificationException':
         console.log('→ Redirecting to verification page');
-        this.router.navigate(['verifyAccount']);
         break;
 
       case 'InvalidCredentialsException':
@@ -106,7 +82,7 @@ export class ErrorHandlerService {
   }
 
   getErrorMessageForCode(errorCode: string): string {
-    return this.errorMessages[errorCode] || 'An unknown error occurred';
+    return ERROR_MESSAGES[errorCode] || DEFAULT_ERROR_MESSAGE;
   }
 
   isErrorOfType(result: any, errorCode: string): boolean {

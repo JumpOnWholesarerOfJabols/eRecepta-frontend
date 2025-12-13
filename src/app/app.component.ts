@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { AuthService } from './services/authServices/authService/auth.service';
+import { AuthService } from './core/auth/services/authService/auth.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { CommonModule } from '@angular/common';
-import { LoadingService } from './services/loadingService/loading.service';
+import { LoadingService } from './core/services/loadingService/loading.service';
 
 @Component({
   selector: 'app-root',
