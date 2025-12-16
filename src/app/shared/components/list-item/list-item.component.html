@@ -1,0 +1,28 @@
+<div class="bg-white rounded-lg shadow-md transition-shadow p-4 border-l-4 border-blue-500">
+  <div class="flex items-center justify-between gap-4">
+    <div class="grid grid-cols-2 gap-4 sm:grid-cols-4 flex-1">
+      <div class="flex flex-col min-w-0">
+        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">First Name</span>
+        <span class="text-md font-medium text-gray-900 mt-1">{{ item.firstName }}</span>
+      </div>
+      <div class="flex flex-col min-w-0">
+        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Last Name</span>
+        <span class="text-md font-medium text-gray-900 mt-1">{{ item.lastName }}</span>
+      </div>
+      <div class="flex flex-col min-w-0">
+        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Email</span>
+        <span class="text-md font-medium text-gray-900 mt-1 truncate">{{ item.email }}</span>
+      </div>
+      <div class="flex flex-col min-w-0">
+        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Role</span>
+        <span class="inline-block text-xs font-semibold mt-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full w-fit whitespace-nowrap">
+          {{ item.role }}
+        </span>
+      </div>
+    </div>
+    <button class="px-4 py-2 bg-red-500 hover:bg-red-600 hover:cursor-pointer text-white text-sm font-medium rounded-lg transition-colors whitespace-nowrap"
+    (click)="deleteUser()">
+      Delete
+    </button>
+  </div>
+</div>

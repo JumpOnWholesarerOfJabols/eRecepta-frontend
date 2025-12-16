@@ -23,6 +23,7 @@ export class AppComponent {
   }
 
   ngOnInit() {
+    console.log("Aktualny token: " + this.authService.getToken())
     if(this.authService.isLoggedIn()) {
       this.router.navigate(['/main'])
       console.log('App component logged')

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { LoginData, ResetPasswordData, VerificationData } from '../../models/CredentialsData';
-import { UserData } from '../../models/UserData';
+import { PatientData } from '../../../models/UserData';
 import { MutationResponse } from '../../../models/graphql-data.model';
 import { LoginResponse, UniversalResponse } from '../../models/ResponseData';
 import { ApolloClient, MutateResult } from '@apollo/client';
@@ -30,7 +30,7 @@ export class AuthApiService {
     })
   }
 
-  registerUser(userData: UserData): Observable<ApolloClient.MutateResult> {
+  registerUser(userData: PatientData): Observable<ApolloClient.MutateResult> {
     return this.apollo.mutate({
       mutation: gql`
         mutation RegisterUser($input: RegisterInput!) {
