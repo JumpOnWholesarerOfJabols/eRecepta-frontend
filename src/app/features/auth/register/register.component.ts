@@ -6,7 +6,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReactiveFormsModule, Validators, NonNullableFormBuilder } from '@angular/forms';
 import { Router, RouterLink } from "@angular/router";
 import { AuthApiService } from '../../../core/auth/services/authApi/auth-api.service';
-import { Gender } from '../../../core/auth/models/UserData';
+import { Gender } from '../../../core/models/UserData';
 import { SnackbarService } from '../../../core/services/snackbarService/snackbar.service';
 import { NgClass } from '@angular/common';
 import { pipe } from 'rxjs';
@@ -66,6 +66,7 @@ console.log(this.registerForm.valid)
         if (result.data) {
           this.snackBar.openSnackBar('Account created! Enter your verification code');
 
+          //zle przepisuje maila?
           this.router.navigate(['verifyAccount'], { queryParams: { login: newUserData.email }});
         } else {
           //handler

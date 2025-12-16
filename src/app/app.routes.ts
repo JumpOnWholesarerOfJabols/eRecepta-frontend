@@ -8,6 +8,8 @@ import { AuthGuardService } from './core/auth/guards/authGuard/auth-guard.servic
 import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
 import { VerifyAccountComponent } from './features/auth/verify-account/verify-account.component';
 import { SetNewPasswordComponent } from './features/auth/set-new-password/set-new-password.component';
+import { AdminDashboardComponent } from './features/mainPanel/admin/admin-dashboard.component';
+import { PatientDashboardComponent } from './features/mainPanel/patient/patient-dashboard.component';
 
 export const routes: Routes = [
     { 
@@ -25,6 +27,10 @@ export const routes: Routes = [
     {
         path: 'main',
         component: MainComponent,
-        canActivate: [AuthGuardService]
+        canActivate: [AuthGuardService],
+        children: [
+            {path: 'adminDashboard', component: AdminDashboardComponent},
+            {path: 'patientDashboard', component: PatientDashboardComponent},
+        ]
     }
 ];

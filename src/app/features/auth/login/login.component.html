@@ -1,28 +1,30 @@
 <div class="flex flex-col h-full">
-  <div class="mb-8">
-    <h2 class="text-3xl font-semibold">Welcome</h2>
-    <p class="text-xl">Please enter your details</p>
+  <div class="mb-12">
+    <h2 class="text-4xl font-bold bg-linear-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">Welcome Back</h2>
+    <p class="text-gray-600 ">Please enter your details to continue</p>
   </div>
   <div class="grow">
-    <form class="flex flex-col" [formGroup]="loginForm" (ngSubmit)="login()">
+    <form class="flex flex-col space-y-1" [formGroup]="loginForm" (ngSubmit)="login()">
       <app-input class="w-full text-2xl" label="Email or Pesel" [type]="InputTypes.LOGIN"
         [control]="loginForm.controls.login"></app-input>
       <app-input label="Password" [type]="InputTypes.PASSWORD" [control]="loginForm.controls.password"></app-input>
 
-      <div class="flex flex-col text-sm mb-3">
+      <div class="flex flex-col text-sm mb-2">
         <div class="flex justify-between items-center">
-          <mat-checkbox [formControl]="loginForm.controls.rememberMe">Remember me</mat-checkbox>
-          <a routerLink="/resetPassword" class="hover:underline">Forgot password</a>
+          <mat-checkbox [formControl]="loginForm.controls.rememberMe" class="text-gray-700">Remember me</mat-checkbox>
+          <a routerLink="/resetPassword" class="text-blue-600 hover:text-blue-700 hover:underline font-medium transition">Forgot password?</a>
         </div>
         <div class="text-right">
-          <a routerLink="/verifyAccount" class="hover:underline">Verify my account</a>
+          <a routerLink="/verifyAccount" class="text-blue-600 hover:text-blue-700 hover:underline font-medium transition">Verify my account</a>
         </div>
       </div>
       
-      <button mat-flat-button type="submit">
-        <span class="text-xl">Sign in</span>
+      <button mat-flat-button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition shadow-md hover:shadow-lg mt-4">
+        <span class="text-lg">Sign in</span>
       </button>
     </form>
   </div>
-  <a class="text-sm hover:underline hover:cursor-pointer self-center pt-2" routerLink="/register">Sign up</a>
+  <div class="text-center pt-6 border-t border-gray-200">
+    <p class="text-gray-600">Don't have an account? <a routerLink="/register" class="text-blue-600 hover:text-blue-700 hover:underline font-semibold transition">Sign up</a></p>
+  </div>
 </div>

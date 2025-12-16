@@ -1,2 +1,20 @@
-<p>main works!</p>
-<button class="hover:underline" (click)="logout()">logout</button>
+<header class="bg-indigo-600 text-white shadow-sm">
+	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+		<div class="flex items-center gap-3">
+			<div class="h-9 w-9 rounded-full bg-white/20 flex items-center justify-center">
+				<span class="font-semibold text-lg">E</span>
+			</div>
+			<h1 class="text-xl sm:text-2xl font-semibold">Erecepta</h1>
+		</div>
+		<button
+			class="px-3 py-2 rounded-md bg-white/10 hover:bg-white/20 transition-colors duration-150 cursor-pointer"
+			(click)="logout()"
+			aria-label="Wyloguj">
+			Wyloguj
+		</button>
+	</div>
+</header>
+
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+	<router-outlet></router-outlet>
+</main>

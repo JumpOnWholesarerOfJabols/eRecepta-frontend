@@ -1,0 +1,93 @@
+<mat-card class="shadow-sm">
+  <mat-card-header class="mb-3">
+    <mat-card-title>Add new user</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="createUserForm" (ngSubmit)="onSubmit()">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <app-input
+          class="w-full"
+          label="First Name"
+          placeholder="e.g. John"
+          [control]="createUserForm.controls.firstName"
+          [type]="InputTypes.TEXT">
+        </app-input>
+
+        <app-input
+          class="w-full"
+          label="Last Name"
+          placeholder="e.g. Smith"
+          [control]="createUserForm.controls.lastName"
+          [type]="InputTypes.TEXT">
+        </app-input>
+
+        <app-input
+          class="w-full"
+          label="Email"
+          placeholder="e.g. john@example.com"
+          [control]="createUserForm.controls.email"
+          [type]="InputTypes.EMAIL">
+        </app-input>
+
+        <app-input
+          class="w-full"
+          label="Phone Number"
+          placeholder="e.g. 500100110"
+          [control]="createUserForm.controls.phoneNumber"
+          [type]="InputTypes.PHONE_NUMBER">
+        </app-input>
+
+        <app-input
+          class="w-full"
+          label="Date of Birth"
+          [control]="createUserForm.controls.dateOfBirth"
+          [type]="InputTypes.DATE">
+        </app-input>
+
+        <app-input
+          class="w-full"
+          label="PESEL"
+          placeholder="11 digits"
+          [control]="createUserForm.controls.pesel"
+          [type]="InputTypes.TEXT">
+        </app-input>
+
+        <app-input
+          class="w-full"
+          label="Gender"
+          [control]="createUserForm.controls.gender"
+          [type]="InputTypes.SELECT"
+          [selectValues]="genders">
+        </app-input>
+
+        <app-input
+          class="w-full"
+          label="Role"
+          [control]="createUserForm.controls.role"
+          [type]="InputTypes.SELECT"
+          [selectValues]="roles">
+        </app-input>
+
+        <app-input
+          class="w-full md:col-span-2"
+          label="Password"
+          placeholder="Minimum 8 characters"
+          [control]="createUserForm.controls.password"
+          [type]="InputTypes.PASSWORD">
+        </app-input>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-end gap-3 mt-6">
+        <button type="submit" mat-flat-button color="primary" [disabled]="isLoading">
+          @if (isLoading) {
+            <mat-icon class="mr-2">hourglass_empty</mat-icon>
+          } @else {
+            <mat-icon class="mr-2">person_add</mat-icon>
+          }
+          <span>Add user</span>
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

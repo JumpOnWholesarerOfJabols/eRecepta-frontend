@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Role } from '../../../models/UserData';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -35,4 +37,32 @@ export class AuthService {
     localStorage.removeItem('user');
     sessionStorage.removeItem('user');
   }
+
+
+
+  getUserRole(): Role | null {
+  const token = this.getToken();
+  if (!token) return null;
+  
+  try {
+    const decoded: any = jwtDecode(token);
+    return decoded.role || null;
+  } catch (error) {
+    console.error('Error decoding token:', error);
+    return null;
+  }
+}
+
+  getUserId(): string | null {
+  const token = this.getToken();
+  if (!token) return null;
+  
+  try {
+    const decoded: any = jwtDecode(token);
+    return decoded.sub || decoded.id || null;
+  } catch (error) {
+    console.error('Error decoding token:', error);
+    return null;
+  }
+}
 }

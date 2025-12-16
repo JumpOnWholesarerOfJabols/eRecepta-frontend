@@ -52,7 +52,7 @@ export class VerifyAccountComponent {
   verify() {
     if (this.verifyForm.valid) {
       let verData: VerificationData = this.verifyForm.getRawValue();
-      verData.login = verData.login.toUpperCase();
+      verData.code = verData.code.toUpperCase();
       this.authApiService.verifyUser(verData)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({

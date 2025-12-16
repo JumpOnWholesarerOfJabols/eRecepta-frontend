@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, delay } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,10 @@ export class LoadingService {
   private counter = 0;
   private loadingSubject = new BehaviorSubject<boolean>(false);
 
-  readonly loading$ = this.loadingSubject.asObservable();
+  //workaround
+  readonly loading$ = this.loadingSubject.asObservable().pipe(
+  delay(0)
+);
 
   show(): void {
     this.counter++;
