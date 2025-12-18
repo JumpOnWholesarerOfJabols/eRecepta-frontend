@@ -27,6 +27,10 @@
               <mat-icon>event_available</mat-icon>
               <span class="ml-2">Make an appointment</span>
             </button>
+            <button mat-flat-button color="primary" class="w-full" (click)="showAppointments()">
+              <mat-icon>list</mat-icon>
+              <span class="ml-2">My appointments</span>
+            </button>
           </div>
         </mat-card-content>
       </mat-card>
@@ -40,10 +44,7 @@
           <mat-card-title>Medical History</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <div class="grid grid-cols-1 gap-4">
-            <!-- Medical history items will be displayed here -->
-            <p class="text-gray-600">Your medical history will appear here</p>
-          </div>
+          <app-patient-history></app-patient-history>
         </mat-card-content>
       </div>
     </main>
@@ -56,11 +57,20 @@
         </mat-card-header>
         <mat-card-content>
           <!-- Appointment booking form will be displayed here -->
-          <p class="text-gray-600">Appointment booking form will appear here</p>
+          <app-appointment></app-appointment>
         </mat-card-content>
       </div>
     </main>
-    } @else {
+    } @else if (action === ACTIONS.SHOW_APPOINTMENTS) {
+      <main class="lg:col-span-9">
+      <div class="">
+        <mat-card-content>
+          <app-appointment-list></app-appointment-list>
+        </mat-card-content>
+      </div>
+    </main>
+    }
+    @else {
 
     }
 

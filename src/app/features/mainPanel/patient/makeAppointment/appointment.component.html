@@ -1,0 +1,102 @@
+<nav class="">
+    <div class="mb-6">
+        <h2 class="text-2xl font-semibold">Book an appointment</h2>
+        <p class="text-sm text-gray-600 mt-1">Follow the steps below to schedule your visit.</p>
+    </div>
+
+    <form [formGroup]="appointmentForm" (ngSubmit)="confirmAppointment()" class="space-y-6">
+
+        <section class="p-4 bg-white/80 rounded-lg shadow-sm border">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="inline-flex items-center justify-center w-7 h-7 bg-blue-100 text-blue-700 rounded-full font-medium">1</span>
+                <h5 class="text-lg font-medium">Select medical specialization</h5>
+            </div>
+
+            <mat-form-field class="w-full">
+                <mat-label>Specialization</mat-label>
+                <mat-select formControlName="specialization" (selectionChange)="onSpecializationChange()" [disabled]="loading">
+                    @for (spec of specializations; track spec) {
+                    <mat-option [value]="spec">{{ spec }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+        </section>
+
+        @if (appointmentForm.controls.specialization.value) {
+        <section class="p-4 bg-white/80 rounded-lg shadow-sm border">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="inline-flex items-center justify-center w-7 h-7 bg-blue-100 text-blue-700 rounded-full font-medium">2</span>
+                <h5 class="text-lg font-medium">Select Doctor</h5>
+            </div>
+
+            @if (doctors.length == 0 && !loading) {
+                <mat-error>No doctor available</mat-error>
+            } @else {
+                <mat-form-field class="w-full">
+                    <mat-label>Doctor</mat-label>
+                    <mat-select formControlName="doctor" (selectionChange)="onDoctorChange()" [disabled]="loading">
+                        @for (doc of doctors; track doc) {
+                        <mat-option [value]="doc">{{ doc }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            }
+        </section>
+        }
+
+        @if (appointmentForm.controls.doctor.value) {
+        <section class="p-4 bg-white/80 rounded-lg shadow-sm border">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="inline-flex items-center justify-center w-7 h-7 bg-blue-100 text-blue-700 rounded-full font-medium">3</span>
+                <h5 class="text-lg font-medium">Select Day</h5>
+            </div>
+
+            @if (availability.length == 0 && !loading) {
+                <mat-error>No available dates for this doctor</mat-error>
+            } @else {
+                <mat-form-field class="w-full">
+                    <mat-label>Date</mat-label>
+                    <input
+                        matInput
+                        [matDatepicker]="picker"
+                        formControlName="date"
+                        [disabled]="loading"
+                        (dateChange)="onDayChange($event)"
+                    />
+
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            }
+        </section>
+        }
+
+        @if (appointmentForm.controls.date.value) {
+        <section class="p-4 bg-white/80 rounded-lg shadow-sm border">
+            <div class="flex items-center gap-3 mb-3">
+                <span class="inline-flex items-center justify-center w-7 h-7 bg-blue-100 text-blue-700 rounded-full font-medium">4</span>
+                <h5 class="text-lg font-medium">Select Time</h5>
+            </div>
+
+            <!-- CZAS TRZEBA WYBRAC TYLKO DLA DANEGO DNIA A NIE WSZYSTKIE CZASY -->
+            @if (hoursAvailability.length == 0) {
+                <mat-error>No available time window for this doctor</mat-error>
+            } @else {
+                <mat-form-field class="w-full">
+                    <mat-label>Time</mat-label>
+                    <mat-select formControlName="time" (selectionChange)="onTimeChange()" [disabled]="loading">
+                        @for (hours of hoursAvailability; track hours) {
+                        <mat-option [value]="hours">{{ hours }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
+            }
+        </section>
+        }
+
+        <div class="flex justify-end">
+            <button mat-flat-button color="primary" type="submit" class="px-6 py-2 rounded-md" [hidden]="appointmentForm.controls.time.value === ''">Confirm</button>
+        </div>
+
+    </form>
+</nav>

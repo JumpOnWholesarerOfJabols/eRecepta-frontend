@@ -1,0 +1,17 @@
+<div class="flex justify-between items-center mb-3">
+    <h4 class="">
+        <mat-card-title>My appointments</mat-card-title>
+    </h4>
+    <div class="flex items-center">
+        <mat-checkbox [(ngModel)]="showCanceled">
+            Show cancelled
+        </mat-checkbox>
+    </div>
+    
+</div>
+
+@for (visit of filteredVisits; track $index) {
+    <div class="m-2">
+        <app-list-item-visit [visit]="visit" (cancelOutput)="cancelVisit($event)"></app-list-item-visit>
+    </div>
+}

@@ -62,4 +62,6 @@ export const apolloConfig = () =>
 export const namedApolloClients = () => ({
   auth: createClientConfig(`${BASE_URL}/auth/graphql`),
   admin: createClientConfig(`${BASE_URL}/admin/graphql`),
+  visit: createClientConfig(`${BASE_URL}/visit/graphql`),
+  patientRecord: createClientConfig(`${BASE_URL}/record/graphql`),
 });
