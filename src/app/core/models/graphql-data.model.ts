@@ -1,3 +1,5 @@
+import { DayOfWeek } from "./ResponseData";
+
 export interface GraphQLErrorExtensions {
   errorCode: string;
   validationErrors?: { [field: string]: string };
@@ -105,4 +107,10 @@ export interface PatientHistoryEntry {
   revisionDate: string;
   revisionType: RevisionType;
   patientState: PatientInfo;
+}
+
+export interface CreateWeeklyAvailabilityInput{
+    dayOfWeek: DayOfWeek
+    startTime: String
+    endTime: String
 }

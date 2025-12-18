@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { TypedDocumentNode } from '@graphql-typed-document-node/core';
 import { PatientData } from '../../models/UserData';
 import { User } from '../../models/UserData';
-import { AdminUserCreateResponse, AdminUserDeleteResponse, GetAllUsersResponse } from '../../auth/models/ResponseData';
+import { AdminUserCreateResponse, AdminUserDeleteResponse, GetAllUsersResponse } from '../../models/ResponseData';
 
 @Injectable({
   providedIn: 'root'

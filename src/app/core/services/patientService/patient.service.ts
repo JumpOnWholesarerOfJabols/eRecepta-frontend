@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Specialization, Visit, CreateVisitInput, PatientHistoryEntry, PatientInfo } from '../../models/graphql-data.model';
 import { ApolloClient } from '@apollo/client';
-import { AllWeeklyAvailabilitiesResponse, WeeklyAvailability } from '../../auth/models/ResponseData';
+import { AllWeeklyAvailabilitiesResponse, WeeklyAvailability } from '../../models/ResponseData';
 
 @Injectable({
   providedIn: 'root'
@@ -89,6 +89,21 @@ export class PatientService {
     
     return this.apollo.use('visit').mutate<{cancelVisit: boolean}>({
       mutation, 
+      variables: {
+        input
+      }
+    })
+  }
+
+  completeVisit(input: string) {
+    const mutation = gql`
+      mutation CompleteVisit($input: String!) {
+        completeVisit(visitId: $input)
+      }
+    `;
+
+    return this.apollo.use('visit').mutate<{completeVisit: boolean}>({
+      mutation,
       variables: {
         input
       }

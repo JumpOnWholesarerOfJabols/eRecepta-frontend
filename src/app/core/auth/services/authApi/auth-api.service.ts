@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { LoginData, ResetPasswordData, VerificationData } from '../../models/CredentialsData';
 import { PatientData } from '../../../models/UserData';
 import { MutationResponse } from '../../../models/graphql-data.model';
-import { LoginResponse, UniversalResponse } from '../../models/ResponseData';
+import { LoginResponse, UniversalResponse } from '../../../models/ResponseData';
 import { ApolloClient, MutateResult } from '@apollo/client';
 
 @Injectable({

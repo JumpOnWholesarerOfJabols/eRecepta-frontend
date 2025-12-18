@@ -1,0 +1,36 @@
+<div class="rounded-lg shadow-md transition-shadow p-4 border-l-4 border-blue-500" [ngClass]="{ 'bg-red-200': visit.visitStatus === VISIT_STATUS.CANCELLED, 'bg-green-200': visit.visitStatus === VISIT_STATUS.COMPLETED, 'bg-white': visit.visitStatus === VISIT_STATUS.SCHEDULED }">
+  <div class="flex items-center justify-between gap-4">
+    <div class="grid grid-cols-2 gap-4 sm:grid-cols-4 flex-1">
+      <div class="flex flex-col min-w-0">
+        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Visit id</span>
+        <span class="text-md font-medium text-gray-900 mt-1">{{ visit.id }}</span>
+      </div>
+      <div class="flex flex-col min-w-0">
+        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Specialization</span>
+        <span class="text-md font-medium text-gray-900 mt-1 text-wrap">{{ visit.specialization }}</span>
+      </div>
+      <div class="flex flex-col min-w-0">
+        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</span>
+        <span [ngClass]="{ 'bg-red-100 text-red-800': visit.visitStatus === VISIT_STATUS.CANCELLED, 'bg-green-100 text-green-800': visit.visitStatus === VISIT_STATUS.COMPLETED }" class="text-md font-bold text-gray-900 mt-1 rounded-full px-3 truncate">{{ visit.visitStatus }}</span>
+      </div>
+      <div class="flex flex-col min-w-0">
+        <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Date and Time</span>
+        <span class="inline-block text-md font-semibold mt-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full">
+          {{ visit.visitTime?.replace('T', ' ') }}
+        </span>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button type="button" [disabled]="visit.visitStatus !== VISIT_STATUS.SCHEDULED"
+        class="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg transition-colors whitespace-nowrap hover:cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-red-500"
+        (click)="cancelVisit()">
+        Cancel
+      </button>
+      <button type="button" [disabled]="visit.visitStatus !== VISIT_STATUS.SCHEDULED"
+        class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg transition-colors whitespace-nowrap hover:cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:bg-green-600"
+        (click)="completeVisit()">
+        Complete
+      </button>
+    </div>
+  </div>
+</div>
