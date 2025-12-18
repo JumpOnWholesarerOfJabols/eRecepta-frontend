@@ -1,5 +1,9 @@
 import { User } from "../../models/UserData";
 
+export enum DayOfWeek{
+    SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
+}
+
 export interface LoginResponse {
   login: {
     token: string;
@@ -29,5 +33,16 @@ export interface AdminUserCreateResponse {
     success: boolean;
     message: string;
   }
+}
+
+export interface WeeklyAvailability{
+    doctorId: string
+    dayOfWeek: DayOfWeek
+    startTime: string
+    endTime: string
+}
+
+export interface AllWeeklyAvailabilitiesResponse {
+  findAllWeeklyAvailabilities: WeeklyAvailability[];
 }
 

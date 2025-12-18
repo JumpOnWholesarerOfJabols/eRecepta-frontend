@@ -17,4 +17,4 @@ import { MatDialogTitle, MatDialogContent, MatDialogActions, MatDialogModule } f
   standalone: true,
   imports: [MatDialogTitle, MatDialogContent, MatDialogActions, MatButtonModule, MatDialogModule]
 })
-export class ConfirmDeleteDialog {}
+export class ConfirmDialog {}

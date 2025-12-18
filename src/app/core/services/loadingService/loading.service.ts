@@ -16,13 +16,11 @@ export class LoadingService {
   show(): void {
     this.counter++;
     if (this.counter > 0) this.loadingSubject.next(true);
-    console.log('s' + this.counter);
   }
 
   hide(): void {
     if (this.counter > 0) this.counter--;
     if (this.counter === 0) this.loadingSubject.next(false);
-    console.log('h' + this.counter);
   }
 
   reset(): void {

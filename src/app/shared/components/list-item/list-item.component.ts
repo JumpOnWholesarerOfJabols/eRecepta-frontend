@@ -7,7 +7,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
-import { ConfirmDeleteDialog } from '../confirm/confirm.dialog';
+import { ConfirmDialog } from '../confirm/confirm.dialog';
 
 @Component({
   selector: 'app-list-item',
@@ -30,7 +30,7 @@ export class ListItemComponent {
   constructor(private dialog: MatDialog) {}
 
   deleteUser() {
-    const dialogRef = this.dialog.open(ConfirmDeleteDialog);
+    const dialogRef = this.dialog.open(ConfirmDialog);
     
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
