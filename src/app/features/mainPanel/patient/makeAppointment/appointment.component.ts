@@ -7,13 +7,14 @@ import { CreateVisitInput } from '../../../../core/models/graphql-data.model';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { DayOfWeek, WeeklyAvailability } from '../../../../core/auth/models/ResponseData';
+import { DayOfWeek, WeeklyAvailability } from '../../../../core/models/ResponseData';
 import { MatButton } from "@angular/material/button";
 import { visit } from 'graphql';
 import { SnackbarService } from '../../../../core/services/snackbarService/snackbar.service';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
+import { formatDate } from '../../../../shared/utils/dateFormatter';
 
 interface AppointmentForm {
   specialization: FormControl<Specialization>;
@@ -90,16 +91,13 @@ export class AppointmentComponent {
       return;
     }
 
-    const day = this.chosenDate.getDate().toString().padStart(2, '0');
-    const month = (this.chosenDate.getMonth() + 1).toString().padStart(2, '0');; 
-    const year = this.chosenDate.getFullYear();
-
-    let dateFormatted = year + '-' + month + '-' + day + 'T';
+    const time = this.appointmentForm.controls.time.value;
+    const dateFormatted = formatDate(this.chosenDate)
 
     let visitData: CreateVisitInput = {
       doctorId: this.appointmentForm.controls.doctor.value,
       specialization: this.appointmentForm.controls.specialization.value,
-      visitTime: dateFormatted + this.appointmentForm.controls.time.value
+      visitTime: dateFormatted + time
     }
 
     this.patientService.createVisit(visitData).subscribe({
@@ -148,24 +146,45 @@ export class AppointmentComponent {
   }
 
   get hoursAvailability() {
-    let temp = this.availability.filter(a => a.dayOfWeek === this.DAY_OF_WEEK.at(this.chosenDate.getDay()));
-
-    let periodStarts = [];
-    let start = temp.at(0)?.startTime;
-    let end = temp.at(0)?.endTime;
-
-    if(start && end) {
-      let startDate = new Date("2026-01-01 " + start);
-      let endDate = new Date("2026-01-01 " + end);
-
-      while(startDate < endDate) {
-        let mins = startDate.getMinutes().toString().length === 1 ? startDate.getMinutes() + '0' : startDate.getMinutes();
-        periodStarts.push(startDate.getHours() + ':' + mins);
-        startDate.setMinutes(startDate.getMinutes() + 20);
-      }
+    if(!this.chosenDate) {
+      return [];
     }
 
-    return periodStarts;
+    const dayOfWeek = this.DAY_OF_WEEK.at(this.chosenDate.getDay());
+    const availability = this.availability.find(a => a.dayOfWeek === dayOfWeek)
+
+    if (!availability) {
+      return [];
+    }
+
+    return this.generateSlots(availability.startTime, availability.endTime);
+  }
+
+  private generateSlots(startTime: string, endTime: string, stepMin: number = 20) {
+    let slots = [];
+
+    let current = this.timeToMinutes(startTime);
+    let end = this.timeToMinutes(endTime);
+
+    while(current < end) {
+      slots.push(this.minutesToTime(current));
+      current += stepMin;
+    }
+
+    return slots;
+
+  }
+
+  private timeToMinutes(time: string): number {
+    const [h, m] = time.split(':').map(Number);
+    return h * 60 + m;
+  }
+
+  private minutesToTime(minutes: number): string {
+    const h = Math.floor(minutes / 60).toString().padStart(2, '0');
+    const m = Math.floor((minutes % 60)).toString().padStart(2, '0');
+
+    return `${h}:${m}`;
   }
 
 }

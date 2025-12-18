@@ -29,6 +29,12 @@ export class MainComponent {
       this.router.navigate(['main/adminDashboard'])
     } else if(this.userRole === this.USER_ROLE.PATIENT) {
       this.router.navigate(['main/patientDashboard'])
+    } else if(this.userRole === this.USER_ROLE.DOCTOR) {
+      this.router.navigate(['main/doctorDashboard'])
+    } else if(this.userRole === this.USER_ROLE.PHARMACIST) {
+      this.router.navigate(['main/pharmacistDashboard'])
+    } else {
+      alert("HACKED!!!!!!!!")
     }
   }
 

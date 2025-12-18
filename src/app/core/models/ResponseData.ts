@@ -1,8 +1,15 @@
-import { User } from "../../models/UserData";
+import { User } from "./UserData";
 
-export enum DayOfWeek{
-    SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
+export enum DayOfWeek {
+  SUNDAY = 'SUNDAY',
+  MONDAY = 'MONDAY',
+  TUESDAY = 'TUESDAY',
+  WEDNESDAY = 'WEDNESDAY',
+  THURSDAY = 'THURSDAY',
+  FRIDAY = 'FRIDAY',
+  SATURDAY = 'SATURDAY'
 }
+
 
 export interface LoginResponse {
   login: {

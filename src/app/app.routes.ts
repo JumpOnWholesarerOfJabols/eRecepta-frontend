@@ -10,6 +10,7 @@ import { VerifyAccountComponent } from './features/auth/verify-account/verify-ac
 import { SetNewPasswordComponent } from './features/auth/set-new-password/set-new-password.component';
 import { AdminDashboardComponent } from './features/mainPanel/admin/admin-dashboard.component';
 import { PatientDashboardComponent } from './features/mainPanel/patient/patient-dashboard.component';
+import { DoctorDashboardComponent } from './features/mainPanel/doctor/doctor-dashboard.component';
 
 export const routes: Routes = [
     { 
@@ -31,6 +32,7 @@ export const routes: Routes = [
         children: [
             {path: 'adminDashboard', component: AdminDashboardComponent},
             {path: 'patientDashboard', component: PatientDashboardComponent},
+            {path: 'doctorDashboard', component: DoctorDashboardComponent},
         ]
     }
 ];

@@ -1,0 +1,58 @@
+<section class="space-y-6">
+  <div>
+    <h2 class="text-xl font-semibold">Add weekly availability</h2>
+    <p class="text-sm text-gray-600">Choose a day and the time window you can take appointments.</p>
+  </div>
+
+  <form [formGroup]="availabilityForm" (ngSubmit)="submit()" class="space-y-6">
+    <section class="p-4 bg-white/90 rounded-lg shadow-sm border border-gray-200">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="inline-flex items-center justify-center w-7 h-7 bg-blue-100 text-blue-700 rounded-full font-medium">1</span>
+        <h5 class="text-lg font-medium">Select day of week</h5>
+      </div>
+
+      <mat-form-field class="w-full">
+        <mat-label>Day</mat-label>
+        <mat-select formControlName="dayOfWeek" [disabled]="loading">
+          @for (day of DAYS; track day) {
+          <mat-option [value]="day">{{ day }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </section>
+
+    @if (availabilityForm.controls.dayOfWeek.value) {
+    <section class="p-4 bg-white/90 rounded-lg shadow-sm border border-gray-200">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="inline-flex items-center justify-center w-7 h-7 bg-blue-100 text-blue-700 rounded-full font-medium">2</span>
+        <h5 class="text-lg font-medium">Choose start time</h5>
+      </div>
+
+      <mat-form-field class="w-full">
+        <mat-label>Start time</mat-label>
+        <input matInput type="time" formControlName="startTime" [disabled]="loading" />
+      </mat-form-field>
+    </section>
+    }
+
+    @if (availabilityForm.controls.startTime.value) {
+    <section class="p-4 bg-white/90 rounded-lg shadow-sm border border-gray-200">
+      <div class="flex items-center gap-3 mb-3">
+        <span class="inline-flex items-center justify-center w-7 h-7 bg-blue-100 text-blue-700 rounded-full font-medium">3</span>
+        <h5 class="text-lg font-medium">Choose end time</h5>
+      </div>
+
+      <mat-form-field class="w-full">
+        <mat-label>End time</mat-label>
+        <input matInput type="time" formControlName="endTime" [disabled]="loading" />
+      </mat-form-field>
+    </section>
+    }
+
+    <div class="flex justify-end">
+      <button mat-flat-button color="primary" type="submit" [disabled]="loading || !availabilityForm.valid">
+        Add availability
+      </button>
+    </div>
+  </form>
+</section>

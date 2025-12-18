@@ -1,0 +1,35 @@
+<section class="p-4 bg-white rounded-lg shadow-sm border border-gray-200 space-y-3">
+	<div class="flex items-center justify-between">
+		<h3 class="text-lg font-semibold">Weekly availability</h3>
+		@if (loading) {
+			<span class="text-sm text-gray-500">Loading...</span>
+		}
+	</div>
+
+	@if (!loading && availability.length === 0) {
+		<p class="text-sm text-gray-600">No availability defined.</p>
+	}
+
+	@if (availability.length > 0) {
+		<div class="overflow-hidden rounded-md border border-gray-200">
+			<table class="min-w-full divide-y divide-gray-200 text-sm">
+				<thead class="bg-gray-50 text-gray-700">
+					<tr>
+						<th class="px-4 py-2 text-left font-semibold">Day</th>
+						<th class="px-4 py-2 text-left font-semibold">Start time</th>
+						<th class="px-4 py-2 text-left font-semibold">End time</th>
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-x-4 divide-gray-100">
+					@for (slot of availability; track $index) {
+					<tr [ngClass]="{ 'bg-gray-100': $index % 2 === 1 }">
+						<td class="px-4 py-2 font-medium text-gray-800">{{ slot.dayOfWeek }}</td>
+						<td class="px-4 py-2 text-gray-700">{{ slot.startTime }}</td>
+						<td class="px-4 py-2 text-gray-700">{{ slot.endTime }}</td>
+					</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	}
+</section>
