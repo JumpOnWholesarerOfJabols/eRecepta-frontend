@@ -7,7 +7,8 @@ import { ERROR_MESSAGES, DEFAULT_ERROR_MESSAGE } from '../../constraints/error-m
 })
 export class ErrorHandlerService {
   constructor(
-    private snackBar: SnackbarService
+    private snackBar: SnackbarService,
+    private router: Router
   ) { };
 
   handleGraphQLError(
@@ -34,6 +35,17 @@ export class ErrorHandlerService {
 
   handleNetworkError(error: any): void {
     console.log('Handling network error:', error);
+    
+    // Check for 401 Unauthorized
+    if (error?.status === 401 || error?.error?.status === 401 || 
+        (error?.message && error.message.includes('401 Unauthorized'))) {
+      this.snackBar.openErrorSnackBar('Session expired. Please log in again.');
+      localStorage.removeItem('token');
+      sessionStorage.removeItem('token');
+      this.router.navigate(['/']);
+      this.logError({ type: 'Network', error: '401 Unauthorized - redirected to login' });
+      return;
+    }
     
     const message = 'No connection with the server. Check your internet connection';
     this.snackBar.openErrorSnackBar(message);

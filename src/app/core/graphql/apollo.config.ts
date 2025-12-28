@@ -10,7 +10,7 @@ import { ErrorLinkFactory } from './apollo-ErrorLinkFactory';
 import { LoadingLinkFactory } from './apollo-LoadingLinkFactory';
 
 const prevURL = 'http://localhost:12000/graphql';
-const BASE_URL = 'http://localhost:7952';
+const BASE_URL = 'http://localhost:8080';
 
 const createClientConfig = (uri: string) => {
   const httpLink = inject(HttpLink);

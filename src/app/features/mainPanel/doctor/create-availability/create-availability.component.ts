@@ -11,7 +11,7 @@ import { CreateWeeklyAvailabilityInput } from '../../../../core/models/graphql-d
 import { SnackbarService } from '../../../../core/services/snackbarService/snackbar.service';
 
 interface AvailabilityForm {
-  dayOfWeek: FormControl<DayOfWeek | null>;
+  dayOfWeek: FormControl<DayOfWeek | undefined>;
   startTime: FormControl<string>;
   endTime: FormControl<string>;
 }
@@ -35,7 +35,7 @@ export class CreateAvailabilityComponent {
     private snackbar: SnackbarService
   ) {
     this.availabilityForm = fb.group({
-      dayOfWeek: [null, { nonNullable: true, validators: Validators.required }],
+      dayOfWeek: [undefined, { nonNullable: true, validators: Validators.required }],
       startTime: ['', { nonNullable: true, validators: Validators.required }],
       endTime: ['', { nonNullable: true, validators: Validators.required }],
     }) as FormGroup<AvailabilityForm>;;
@@ -65,7 +65,7 @@ export class CreateAvailabilityComponent {
         this.loading = false;
         if (result.data?.createWeeklyAvailability) {
           this.snackbar.openSnackBar('Availability added');
-          this.availabilityForm.reset({ dayOfWeek: null, startTime: '', endTime: '' });
+          this.availabilityForm.reset({ dayOfWeek: undefined, startTime: '', endTime: '' });
           Object.values(this.availabilityForm.controls).forEach(control => {
             control.setErrors(null);
           })

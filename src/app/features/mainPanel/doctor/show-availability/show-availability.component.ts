@@ -48,4 +48,17 @@ export class ShowAvailabilityComponent implements OnInit {
       },
     });
   }
+
+  deleteAvailability(dayOfWeek: string) {
+    this.doctorService.deleteWeeklyAvailability(dayOfWeek).subscribe({
+      next: (result) => {
+        if (result.data?.deleteWeeklyAvailability) {
+          this.loadAvailability();
+        }
+      },
+      error: () => {
+        console.error('Failed to delete availability');
+      },
+    });
+  }
 }
