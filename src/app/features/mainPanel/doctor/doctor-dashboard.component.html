@@ -20,6 +20,10 @@
 							<mat-icon>event_available</mat-icon>
 							<span class="ml-2">Manage availability</span>
 						</button>
+						<button mat-flat-button color="primary" class="w-full" (click)="manageSpecialization()">
+							<mat-icon>badge</mat-icon>
+							<span class="ml-2">Manage specialization</span>
+						</button>
 						<button mat-flat-button color="primary" class="w-full" (click)="showAppointments()">
 							<mat-icon>event_note</mat-icon>
 							<span class="ml-2">Appointments</span>
@@ -39,10 +43,11 @@
 						<app-show-availability [reload$]="reload$"></app-show-availability>
 					</div>
 				</div>
-			}
-			@if (action === ACTIONS.APPOINTMENTS) {
+			} @else if (action === ACTIONS.MANAGE_SPECIALIZATION) {
+				<app-manage-specialization></app-manage-specialization>
+			} @else if (action === ACTIONS.APPOINTMENTS) {
 				<app-doctor-appointment-list></app-doctor-appointment-list>
-			}
+			} 
 		</main>
 	</div>
 </section>

@@ -1,0 +1,80 @@
+<div class="space-y-8">
+	<header class="flex items-start justify-between gap-4">
+		<div class="space-y-1">
+			<p class="text-xs uppercase tracking-[0.2em] text-slate-400">Doctor</p>
+			<h2 class="text-2xl font-semibold text-slate-900">Manage specializations</h2>
+			<p class="text-sm text-slate-500">Keep only the specializations you offer and add new ones when needed.</p>
+		</div>
+		<mat-progress-spinner *ngIf="loading" diameter="28" strokeWidth="4" mode="indeterminate"></mat-progress-spinner>
+	</header>
+
+	<section class="p-4 bg-white/80 rounded-lg shadow-sm border space-y-3">
+		<div class="flex items-center gap-3">
+			<span class="inline-flex items-center justify-center w-7 h-7 bg-blue-100 text-blue-700 rounded-full font-medium">1</span>
+			<h3 class="text-lg font-semibold text-slate-900">Your specializations</h3>
+		</div>
+		<ng-container *ngIf="!loading; else loadingBlock">
+			<div *ngIf="specializations.length === 0" class="text-sm text-slate-500">
+				No specializations assigned yet. Add one below.
+			</div>
+
+			<div *ngIf="specializations.length > 0" class="border border-slate-200 rounded-md divide-y divide-slate-200">
+				<div *ngFor="let spec of specializations; trackBy: trackBySpec" class="flex items-center justify-between px-4 py-3">
+					<div class="flex items-center gap-3">
+						<span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-indigo-50 text-indigo-600 text-sm font-semibold">
+							{{ spec[0] }}
+						</span>
+						<div class="flex flex-col">
+							<span class="font-semibold text-slate-900">{{ humanizeSpecialization(spec) }}</span>
+							<span class="text-xs text-slate-500">Listed for scheduling</span>
+						</div>
+					</div>
+					<button
+						mat-stroked-button
+						color="warn"
+						(click)="removeSpecialization(spec)"
+						[disabled]="mutating"
+						class="px-3 h-9 rounded-md"
+					>
+						<mat-icon class="!text-base mr-1">delete</mat-icon>
+						Remove
+					</button>
+				</div>
+			</div>
+		</ng-container>
+		<ng-template #loadingBlock>
+			<div class="py-4 text-sm text-slate-500">Loading specializations…</div>
+		</ng-template>
+	</section>
+
+	<section class="p-4 bg-white/80 rounded-lg shadow-sm border space-y-4">
+		<div class="flex items-center gap-3">
+			<span class="inline-flex items-center justify-center w-7 h-7 bg-blue-100 text-blue-700 rounded-full font-medium">2</span>
+			<h3 class="text-lg font-semibold text-slate-900">Add specialization</h3>
+		</div>
+		<div class="grid gap-4 items-end">
+			<mat-form-field appearance="fill" class="w-full">
+				<mat-label>Specialization</mat-label>
+				<mat-select [formControl]="specializationControl">
+					<mat-option *ngFor="let option of getSelectableSpecializations()" [value]="option">
+						{{ humanizeSpecialization(option) }}
+					</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<button
+				mat-flat-button
+				color="primary"
+				(click)="addSpecialization()"
+				[disabled]="mutating || !specializationControl.value || getSelectableSpecializations().length === 0"
+				class="px-6 py-2 rounded-md justify-self-center flex items-center justify-center gap-2"
+			>
+				<mat-icon>add</mat-icon>
+				<span>Add</span>
+			</button>
+		</div>
+		<p class="text-sm text-slate-500" *ngIf="getSelectableSpecializations().length === 0">
+			All available specializations are already assigned.
+		</p>
+	</section>
+</div>
