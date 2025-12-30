@@ -58,6 +58,50 @@ export enum VisitStatus {
   CANCELLED = 'CANCELLED',
 }
 
+// Prescription related types
+export enum PrescriptionStatus {
+  ISSUED = 'ISSUED',
+  PARTIALLY_FILLED = 'PARTIALLY_FILLED',
+  FILLED = 'FILLED',
+  CANCELLED = 'CANCELLED',
+  EXPIRED = 'EXPIRED',
+}
+
+export interface Prescription {
+  id: string;
+  createdAt: string;
+  expiresAt: string;
+  accessCode: string;
+  status: PrescriptionStatus;
+  doctorId: string;
+  patientId: string;
+  medicationId: string;
+  totalPackages: number;
+  filledPackages: number;
+  remainingPackages: number;
+}
+
+export interface IssuePrescriptionInput {
+  patientId: string;
+  medicationId: string;
+  quantity: number;
+  expiration: string;
+}
+
+export interface FulfillPrescriptionInput {
+  prescriptionId: string;
+  quantity: number;
+}
+
+export interface FulfillResult {
+  updatedPrescription: Prescription;
+  isFullyCompleted: boolean;
+}
+
+export interface IssuedPrescriptionsResult {
+  prescription: Prescription;
+}
+
 export interface Visit {
   id: string;
   doctorId: string;

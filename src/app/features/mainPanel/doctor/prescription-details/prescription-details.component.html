@@ -1,0 +1,146 @@
+<div class="m-4 overflow-hidden">
+  <div class="h-full overflow-y-auto overflow-x-hidden">
+    <div class="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+      <div class="flex items-center space-x-3">
+        <mat-icon class="text-primary text-3xl">receipt_long</mat-icon>
+        <h2 class="text-2xl font-semibold text-gray-900">Prescription Details</h2>
+      </div>
+      <button mat-icon-button (click)="onClose()" class="text-gray-500">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="space-y-6">
+      <!-- Status -->
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-medium text-gray-600">Status</span>
+          <mat-chip [color]="getStatusColor(prescription.status)" highlighted>
+            {{ getStatusLabel(prescription.status) }}
+          </mat-chip>
+        </div>
+      </div>
+
+      <!-- Prescription ID -->
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <div class="flex items-center justify-between">
+          <div class="flex-1">
+            <label class="text-sm font-medium text-gray-600 block mb-1">Prescription ID</label>
+            <p class="text-sm font-mono text-gray-900 break-all">{{ prescription.id }}</p>
+          </div>
+          <button mat-icon-button (click)="copyToClipboard(prescription.id)" class="ml-2 text-primary">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Access Code -->
+      <div class="bg-blue-50 p-4 rounded-lg border-2 border-blue-200">
+        <div class="flex items-center justify-between">
+          <div class="flex-1">
+            <label class="text-sm font-medium text-blue-900 block mb-1">
+              <mat-icon class="text-blue-600 align-middle mr-1">vpn_key</mat-icon>
+              Access Code
+            </label>
+            <p class="text-2xl font-bold font-mono text-blue-900 tracking-wider">
+              {{ prescription.accessCode }}
+            </p>
+            <p class="text-xs text-blue-700 mt-1">Share this code with the patient</p>
+          </div>
+          <button mat-icon-button (click)="copyToClipboard(prescription.accessCode)" class="ml-2 text-blue-600">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- Patient Information -->
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+          <mat-icon class="mr-2 text-primary">person</mat-icon>
+          Patient Information
+        </h3>
+        <div>
+          <label class="text-sm font-medium text-gray-600 block mb-1">Patient ID</label>
+          <p class="text-sm text-gray-900 font-mono">{{ prescription.patientId }}</p>
+        </div>
+      </div>
+
+      <!-- Medication Information -->
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+          <mat-icon class="mr-2 text-primary">medication</mat-icon>
+          Medication Information
+        </h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm font-medium text-gray-600 block mb-1">Medication</label>
+            <p class="text-sm text-gray-900">{{prescription.medicationId }}</p>
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-600 block mb-1">Medication ID</label>
+            <p class="text-sm text-gray-900 font-mono">{{ prescription.medicationId }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Package Information -->
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+          <mat-icon class="mr-2 text-primary">inventory_2</mat-icon>
+          Package Information
+        </h3>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="text-center p-3 bg-white rounded-lg">
+            <p class="text-2xl font-bold text-blue-600">{{ prescription.totalPackages }}</p>
+            <p class="text-xs text-gray-600 mt-1">Total</p>
+          </div>
+          <div class="text-center p-3 bg-white rounded-lg">
+            <p class="text-2xl font-bold text-green-600">{{ prescription.filledPackages }}</p>
+            <p class="text-xs text-gray-600 mt-1">Filled</p>
+          </div>
+          <div class="text-center p-3 bg-white rounded-lg">
+            <p class="text-2xl font-bold text-orange-600">{{ prescription.remainingPackages }}</p>
+            <p class="text-xs text-gray-600 mt-1">Remaining</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Date Information -->
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+          <mat-icon class="mr-2 text-primary">event</mat-icon>
+          Date Information
+        </h3>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="text-sm font-medium text-gray-600 block mb-1">Issued Date</label>
+            <p class="text-sm text-gray-900">{{ formatDate(prescription.createdAt) }}</p>
+          </div>
+          <div>
+            <label class="text-sm font-medium text-gray-600 block mb-1">Expiration Date</label>
+            <p class="text-sm text-gray-900">{{ formatDate(prescription.expiresAt) }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Doctor Information -->
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-900 mb-3 flex items-center">
+          <mat-icon class="mr-2 text-primary">medical_services</mat-icon>
+          Doctor Information
+        </h3>
+        <div>
+          <label class="text-sm font-medium text-gray-600 block mb-1">Doctor ID</label>
+          <p class="text-sm text-gray-900 font-mono">{{ prescription.doctorId }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 pt-4 border-t border-gray-200 flex justify-end">
+      <button mat-flat-button color="primary" (click)="onClose()">
+        <mat-icon>check</mat-icon>
+        <span class="ml-2">Close</span>
+      </button>
+    </div>
+  </div>
+</div>

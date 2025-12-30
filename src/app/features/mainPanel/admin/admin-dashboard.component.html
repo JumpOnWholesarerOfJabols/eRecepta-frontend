@@ -57,8 +57,12 @@
     <main class="lg:col-span-9">
       <app-create-user></app-create-user>
     </main>
+    } @else if (action === ACTIONS.MANAGE_MEDICATIONS) {
+    <!-- Manage Medications -->
+    <main class="lg:col-span-9">
+      <app-manage-medication></app-manage-medication>
+    </main>
     } @else {
-
     }
 
   </div>

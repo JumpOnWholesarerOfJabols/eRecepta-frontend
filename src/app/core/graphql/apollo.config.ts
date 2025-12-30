@@ -10,7 +10,7 @@ import { ErrorLinkFactory } from './apollo-ErrorLinkFactory';
 import { LoadingLinkFactory } from './apollo-LoadingLinkFactory';
 
 const prevURL = 'http://localhost:12000/graphql';
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://localhost:21371';
 
 const createClientConfig = (uri: string) => {
   const httpLink = inject(HttpLink);
@@ -64,4 +64,6 @@ export const namedApolloClients = () => ({
   admin: createClientConfig(`${BASE_URL}/admin/graphql`),
   visit: createClientConfig(`${BASE_URL}/visit/graphql`),
   patientRecord: createClientConfig(`${BASE_URL}/record/graphql`),
+  medication: createClientConfig(`${BASE_URL}/medication/graphql`),
+  prescriptions: createClientConfig(`${BASE_URL}/prescriptions/graphql`),
 });

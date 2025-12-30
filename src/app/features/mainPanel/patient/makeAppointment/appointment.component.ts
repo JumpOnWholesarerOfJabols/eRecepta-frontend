@@ -14,7 +14,7 @@ import { SnackbarService } from '../../../../core/services/snackbarService/snack
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
-import { formatDate } from '../../../../shared/utils/dateFormatter';
+import { formatDateTime } from '../../../../shared/utils/dateFormatter';
 
 interface AppointmentForm {
   specialization: FormControl<Specialization>;
@@ -92,7 +92,7 @@ export class AppointmentComponent {
     }
 
     const time = this.appointmentForm.controls.time.value;
-    const dateFormatted = formatDate(this.chosenDate)
+    const dateFormatted = formatDateTime(this.chosenDate)
 
     let visitData: CreateVisitInput = {
       doctorId: this.appointmentForm.controls.doctor.value,
