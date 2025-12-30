@@ -28,6 +28,14 @@
 							<mat-icon>event_note</mat-icon>
 							<span class="ml-2">Appointments</span>
 						</button>
+						<button mat-flat-button color="primary" class="w-full" (click)="showIssuePrescription()">
+							<mat-icon>add_box</mat-icon>
+							<span class="ml-2">Issue Prescription</span>
+						</button>
+						<button mat-flat-button color="primary" class="w-full" (click)="showPrescriptionHistory()">
+							<mat-icon>history</mat-icon>
+							<span class="ml-2">Prescription History</span>
+						</button>
 					</div>
 				</mat-card-content>
 			</mat-card>
@@ -47,7 +55,11 @@
 				<app-manage-specialization></app-manage-specialization>
 			} @else if (action === ACTIONS.APPOINTMENTS) {
 				<app-doctor-appointment-list></app-doctor-appointment-list>
-			} 
+			} @else if (action === ACTIONS.ISSUE_PRESCRIPTION) {
+				<app-issue-prescription></app-issue-prescription>
+			} @else if (action === ACTIONS.PRESCRIPTION_HISTORY) {
+				<app-prescription-list></app-prescription-list>
+			}
 		</main>
 	</div>
 </section>

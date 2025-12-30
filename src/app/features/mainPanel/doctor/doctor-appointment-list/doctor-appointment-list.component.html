@@ -2,15 +2,28 @@
   <h4>
     <mat-card-title>My appointments</mat-card-title>
   </h4>
-  <div class="flex items-center">
+  <div class="flex flex-col items-end">
     <mat-checkbox [(ngModel)]="showCanceled">
       Show cancelled
     </mat-checkbox>
+    <mat-form-field appearance="fill" class="w-48">
+      <mat-label>Select Date</mat-label>
+      <input 
+        matInput 
+        [matDatepicker]="picker" 
+        [(ngModel)]="chosenDate"
+        placeholder="MM/DD/YYYY">
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <button mat-stroked-button (click)="clearFilters()" class="mt-6">Clear Filters</button>
+
   </div>
 </div>
 
-@for (visit of filteredVisits; track $index) {
-  <div class="m-2">
-    <app-doctor-visit-list-item [visit]="visit" (cancelOutput)="cancelVisit($event)" (completeOutput)="completeVisit($event)"></app-doctor-visit-list-item>
-  </div>
+@for (visit of filteredVisits$ | async; track $index) {
+<div class="m-2">
+  <app-doctor-visit-list-item [visit]="visit" (cancelOutput)="cancelVisit($event)"
+    (completeOutput)="completeVisit($event)"></app-doctor-visit-list-item>
+</div>
 }

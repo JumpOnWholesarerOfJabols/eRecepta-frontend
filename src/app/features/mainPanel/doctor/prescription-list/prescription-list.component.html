@@ -1,0 +1,170 @@
+<mat-card class="shadow-sm">
+  <mat-card-header class="border-b border-gray-200 pb-4 mb-6">
+    <div class="flex items-center space-x-2">
+      <mat-icon class="text-primary">list_alt</mat-icon>
+      <mat-card-title>Prescription List</mat-card-title>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    <!-- Filter Section -->
+    <form [formGroup]="filterForm" class="mb-6 bg-gray-50 p-4 rounded-lg">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>Patient ID</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="patientId"
+            placeholder="Enter patient ID"
+          />
+          <mat-icon matPrefix>person</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            @for (status of statusOptions; track status.value) {
+              <mat-option [value]="status.value">{{ status.label }}</mat-option>
+            }
+          </mat-select>
+          <mat-icon matPrefix>filter_list</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <div class="flex justify-end space-x-3">
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="onReset()"
+          [disabled]="isLoading"
+        >
+          <mat-icon>refresh</mat-icon>
+          <span class="ml-2">Reset</span>
+        </button>
+        <button
+          mat-flat-button
+          color="primary"
+          type="button"
+          (click)="onSearch()"
+          [disabled]="isLoading"
+        >
+          @if (isLoading) {
+            <mat-icon class="animate-spin">refresh</mat-icon>
+          } @else {
+            <mat-icon>search</mat-icon>
+          }
+          <span class="ml-2">{{ isLoading ? 'Searching...' : 'Search' }}</span>
+        </button>
+      </div>
+    </form>
+
+    <!-- Results Section -->
+    @if (prescriptions.length > 0) {
+      <div class="overflow-x-auto">
+        <table mat-table [dataSource]="prescriptions" class="w-full">
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">ID</th>
+            <td mat-cell *matCellDef="let prescription" class="text-sm">
+              {{ prescription.id}}
+            </td>
+          </ng-container>
+
+          <!-- Patient ID Column -->
+          <ng-container matColumnDef="patientId">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">Patient ID</th>
+            <td mat-cell *matCellDef="let prescription" class="text-sm font-mono">
+              {{ prescription.patientId }}
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">Status</th>
+            <td mat-cell *matCellDef="let prescription">
+              <mat-chip [color]="getStatusColor(prescription.status)" highlighted>
+                {{ getStatusLabel(prescription.status) }}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Total Packages Column -->
+          <ng-container matColumnDef="totalPackages">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">Total</th>
+            <td mat-cell *matCellDef="let prescription" class="text-sm">
+              {{ prescription.totalPackages }}
+            </td>
+          </ng-container>
+
+          <!-- Remaining Packages Column -->
+          <ng-container matColumnDef="remainingPackages">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">Remaining</th>
+            <td mat-cell *matCellDef="let prescription" class="text-sm">
+              {{ prescription.remainingPackages }}
+            </td>
+          </ng-container>
+
+          <!-- Created At Column -->
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">Issued</th>
+            <td mat-cell *matCellDef="let prescription" class="text-sm">
+              {{ formatDate(prescription.createdAt) }}
+            </td>
+          </ng-container>
+
+          <!-- Expires At Column -->
+          <ng-container matColumnDef="expiresAt">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">Expires</th>
+            <td mat-cell *matCellDef="let prescription" class="text-sm">
+              {{ formatDate(prescription.expiresAt) }}
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="font-semibold">Actions</th>
+            <td mat-cell *matCellDef="let prescription">
+              <div class="flex space-x-2">
+                <button
+                  mat-icon-button
+                  color="primary"
+                  (click)="viewDetails(prescription)"
+                  matTooltip="View Details"
+                >
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                @if (canCancel(prescription)) {
+                  <button
+                    mat-icon-button
+                    color="warn"
+                    (click)="onCancelPrescription(prescription)"
+                    matTooltip="Cancel Prescription"
+                  >
+                    <mat-icon>cancel</mat-icon>
+                  </button>
+                }
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns" class="hover:bg-gray-50"></tr>
+        </table>
+      </div>
+    } @else if (!isLoading) {
+      <div class="text-center py-12 text-gray-500">
+        <mat-icon class="text-6xl mb-4 text-gray-400">search_off</mat-icon>
+        <p class="text-lg">No prescriptions found</p>
+        <p class="text-sm">Enter a patient ID and click search to view prescriptions</p>
+      </div>
+    }
+
+    @if (isLoading) {
+      <div class="text-center py-12">
+        <mat-icon class="text-6xl mb-4 text-primary animate-spin">refresh</mat-icon>
+        <p class="text-lg text-gray-600">Loading prescriptions...</p>
+      </div>
+    }
+  </mat-card-content>
+</mat-card>

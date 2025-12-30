@@ -8,10 +8,12 @@ import { AdminService } from '../../../core/services/adminService/admin.service'
 import { AuthService } from '../../../core/auth/services/authService/auth.service';
 import { SnackbarService } from '../../../core/services/snackbarService/snackbar.service';
 import { CreateUserComponent } from './create-user/create-user.component';
+import { ManageMedicationComponent } from './manage-medication/manage-medication.component';
 
 enum ACTIONS {
     SHOW_USERS,
-    ADD_USER
+    ADD_USER,
+    MANAGE_MEDICATIONS,
 }
 
 @Component({
@@ -19,7 +21,7 @@ enum ACTIONS {
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css'],
     standalone: true,
-    imports: [MatButtonModule, MatCardModule, MatIconModule, ListItemComponent, CreateUserComponent]
+    imports: [MatButtonModule, MatCardModule, MatIconModule, ListItemComponent, CreateUserComponent, ManageMedicationComponent]
 })
 export class AdminDashboardComponent implements OnInit {
     
@@ -79,7 +81,7 @@ export class AdminDashboardComponent implements OnInit {
     }
 
     editMedications() {
-        this.snackbar.openSnackBar("IN PROGRESS");
+        this.action = ACTIONS.MANAGE_MEDICATIONS;
     }
 
 }

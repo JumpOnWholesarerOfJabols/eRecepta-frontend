@@ -1,0 +1,266 @@
+<section class="grid grid-cols-1 gap-6">
+  <!-- Create Medication -->
+  <div class="lg:col-span-5">
+    <mat-card class="shadow-sm">
+      <mat-card-header>
+        <mat-card-title>Create Medication</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form class="space-y-4" [formGroup]="createForm">
+          <div class="grid grid-cols-1 gap-3">
+            <mat-form-field appearance="fill" class="w-full">
+              <mat-label>EAN</mat-label>
+              <input matInput formControlName="ean" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full">
+              <mat-label>ATC Code</mat-label>
+              <input matInput formControlName="atcCode" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full sm:col-span-2">
+              <mat-label>Trade Name</mat-label>
+              <input matInput formControlName="tradeName" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full sm:col-span-2">
+              <mat-label>Generic Name</mat-label>
+              <input matInput formControlName="genericName" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full sm:col-span-2">
+              <mat-label>Manufacturer</mat-label>
+              <input matInput formControlName="manufacturer" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full">
+              <mat-label>Form</mat-label>
+              <mat-select formControlName="form">
+                <mat-option *ngFor="let f of forms" [value]="f">{{ f }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full">
+              <mat-label>Route</mat-label>
+              <mat-select formControlName="route">
+                <mat-option *ngFor="let r of routes" [value]="r">{{ r }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full sm:col-span-2">
+              <mat-label>Package Size</mat-label>
+              <input matInput formControlName="packageSize" />
+            </mat-form-field>
+            <div class="sm:col-span-2 flex items-center space-x-3">
+              <mat-checkbox formControlName="requiresPrescription">Requires Prescription</mat-checkbox>
+            </div>
+          </div>
+
+          <!-- Ingredients Draft -->
+          <div>
+            <div class="font-medium mb-2">Ingredients</div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+              <mat-form-field appearance="fill" class="w-full">
+                <mat-label>Name</mat-label>
+                <input matInput formControlName="ingredientName" />
+              </mat-form-field>
+              <mat-form-field appearance="fill" class="w-full">
+                <mat-label>Strength</mat-label>
+                <input matInput formControlName="ingredientStrength" />
+              </mat-form-field>
+              <div class="flex items-center space-x-3">
+                <mat-checkbox formControlName="ingredientActive">Active</mat-checkbox>
+                <button mat-stroked-button color="primary" type="button" (click)="addIngredientDraft()">Add</button>
+              </div>
+            </div>
+            <ul class="mt-2 divide-y divide-gray-200 rounded border">
+              <li *ngFor="let ing of ingredientsDraft; let i = index" class="flex items-center justify-between px-3 py-2">
+                <div class="text-sm">{{ ing.name }} — {{ ing.strength }} — {{ ing.isActive ? 'Active' : 'Inactive' }}</div>
+                <button mat-icon-button color="warn" (click)="removeIngredientDraft(i)"><mat-icon>delete</mat-icon></button>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Indications Draft -->
+          <div>
+            <div class="font-medium mb-2">Indications</div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+              <mat-form-field appearance="fill" class="sm:col-span-2 w-full">
+                <mat-label>Indication</mat-label>
+                <input matInput formControlName="indicationText" />
+              </mat-form-field>
+              <button mat-stroked-button color="primary" type="button" (click)="addIndicationDraft()">Add</button>
+            </div>
+            <ul class="mt-2 divide-y divide-gray-200 rounded border">
+              <li *ngFor="let ind of indicationsDraft; let i = index" class="flex items-center justify-between px-3 py-2">
+                <div class="text-sm">{{ ind }}</div>
+                <button mat-icon-button color="warn" (click)="removeIndicationDraft(i)"><mat-icon>delete</mat-icon></button>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Side Effects Draft -->
+          <div>
+            <div class="font-medium mb-2">Side Effects</div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end">
+              <mat-form-field appearance="fill" class="sm:col-span-2 w-full">
+                <mat-label>Side Effect</mat-label>
+                <input matInput formControlName="sideEffectText" />
+              </mat-form-field>
+              <button mat-stroked-button color="primary" type="button" (click)="addSideEffectDraft()">Add</button>
+            </div>
+            <ul class="mt-2 divide-y divide-gray-200 rounded border">
+              <li *ngFor="let se of sideEffectsDraft; let i = index" class="flex items-center justify-between px-3 py-2">
+                <div class="text-sm">{{ se }}</div>
+                <button mat-icon-button color="warn" (click)="removeSideEffectDraft(i)"><mat-icon>delete</mat-icon></button>
+              </li>
+            </ul>
+          </div>
+
+          <div class="flex justify-end">
+            <button mat-flat-button color="primary" type="button" (click)="createMedication()" [disabled]="creating || createForm.invalid">
+              <mat-icon>add</mat-icon>
+              <span class="ml-2">Create Medication</span>
+            </button>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <!-- List & Edit -->
+  <div class="lg:col-span-7">
+    <mat-card class="shadow-sm">
+      <mat-card-header>
+        <mat-card-title>Medications</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="flex items-center gap-3 mb-3">
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Search</mat-label>
+            <input matInput [(ngModel)]="search" (keyup.enter)="loadMedications()" />
+          </mat-form-field>
+          <button mat-stroked-button color="primary" (click)="loadMedications()">Search</button>
+        </div>
+        <div class="grid grid-cols-1 gap-2">
+          <div *ngFor="let med of medications" class="border rounded p-3 hover:bg-gray-50 cursor-pointer" (click)="selectMedication(med)">
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="font-medium">{{ med.tradeName }} ({{ med.genericName }})</div>
+                <div class="text-sm text-gray-600">{{ med.manufacturer }} — {{ med.form }} — {{ med.route }}</div>
+              </div>
+              <div class="text-xs text-gray-500">{{ med.ean }} — {{ med.atcCode }}</div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card *ngIf="selected" class="shadow-sm mt-6">
+      <mat-card-header>
+        <mat-card-title>Edit: {{ selected.tradeName }}</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form class="space-y-4" [formGroup]="patchForm">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <mat-form-field appearance="fill" class="w-full">
+              <mat-label>EAN</mat-label>
+              <input matInput formControlName="ean" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full">
+              <mat-label>ATC Code</mat-label>
+              <input matInput formControlName="atcCode" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full sm:col-span-2">
+              <mat-label>Trade Name</mat-label>
+              <input matInput formControlName="tradeName" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full sm:col-span-2">
+              <mat-label>Generic Name</mat-label>
+              <input matInput formControlName="genericName" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full sm:col-span-2">
+              <mat-label>Manufacturer</mat-label>
+              <input matInput formControlName="manufacturer" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full">
+              <mat-label>Form</mat-label>
+              <mat-select formControlName="form">
+                <mat-option *ngFor="let f of forms" [value]="f">{{ f }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full">
+              <mat-label>Route</mat-label>
+              <mat-select formControlName="route">
+                <mat-option *ngFor="let r of routes" [value]="r">{{ r }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full sm:col-span-2">
+              <mat-label>Package Size</mat-label>
+              <input matInput formControlName="packageSize" />
+            </mat-form-field>
+            <div class="sm:col-span-2">
+              <mat-checkbox formControlName="requiresPrescription">Requires Prescription</mat-checkbox>
+            </div>
+          </div>
+          <div class="flex justify-between">
+            <button mat-flat-button color="primary" type="button" (click)="patchMedication()" [disabled]="updating">Save Changes</button>
+            <button mat-stroked-button color="warn" type="button" (click)="deleteMedication()" [disabled]="deleting">Delete</button>
+          </div>
+        </form>
+
+        <div class="mt-6">
+          <div class="font-medium mb-2">Ingredients</div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 items-end mb-3">
+            <mat-form-field appearance="fill" class="w-full">
+              <mat-label>Name</mat-label>
+              <input matInput [(ngModel)]="selectedIngredientName" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-full">
+              <mat-label>Strength</mat-label>
+              <input matInput [(ngModel)]="selectedIngredientStrength" />
+            </mat-form-field>
+            <div class="flex items-center space-x-3">
+              <mat-checkbox [(ngModel)]="selectedIngredientActive">Active</mat-checkbox>
+              <button mat-stroked-button color="primary" type="button" (click)="addSelectedIngredient()">Add</button>
+            </div>
+          </div>
+          <ul class="divide-y divide-gray-200 rounded border">
+            <li *ngFor="let ing of selected.ingredients" class="px-3 py-2 text-sm flex items-center justify-between">
+              <div>{{ ing.name }} — {{ ing.strength }} — {{ ing.isActive ? 'Active' : 'Inactive' }}</div>
+              <button mat-icon-button color="warn" (click)="removeSelectedIngredient(ing.id)"><mat-icon>delete</mat-icon></button>
+            </li>
+          </ul>
+        </div>
+
+        <div class="mt-6 grid grid-cols-2 gap-4">
+          <div>
+            <div class="font-medium mb-2">Indications</div>
+            <div class="grid grid-cols-3 gap-3 items-end mb-3">
+              <mat-form-field appearance="fill" class="col-span-2 w-full">
+                <mat-label>Indication</mat-label>
+                <input matInput [(ngModel)]="selectedIndicationText" />
+              </mat-form-field>
+              <button mat-stroked-button color="primary" type="button" (click)="addSelectedIndication()">Add</button>
+            </div>
+            <ul class="divide-y divide-gray-200 rounded border">
+              <li *ngFor="let ind of selected.indications" class="px-3 py-2 text-sm flex items-center justify-between">
+                <div>{{ ind }}</div>
+                <button mat-icon-button color="warn" (click)="removeSelectedIndication(ind)"><mat-icon>delete</mat-icon></button>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <div class="font-medium mb-2">Side Effects</div>
+            <div class="grid grid-cols-3 gap-3 items-end mb-3">
+              <mat-form-field appearance="fill" class="col-span-2 w-full">
+                <mat-label>Side Effect</mat-label>
+                <input matInput [(ngModel)]="selectedSideEffectText" />
+              </mat-form-field>
+              <button mat-stroked-button color="primary" type="button" (click)="addSelectedSideEffect()">Add</button>
+            </div>
+            <ul class="divide-y divide-gray-200 rounded border">
+              <li *ngFor="let se of selected.sideEffects" class="px-3 py-2 text-sm flex items-center justify-between">
+                <div>{{ se }}</div>
+                <button mat-icon-button color="warn" (click)="removeSelectedSideEffect(se)"><mat-icon>delete</mat-icon></button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</section>

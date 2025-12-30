@@ -1,0 +1,119 @@
+<mat-card class="shadow-sm">
+  <mat-card-header class="border-b border-gray-200 pb-4 mb-6">
+    <div class="flex items-center space-x-2">
+      <mat-icon class="text-primary">add_circle</mat-icon>
+      <mat-card-title>Issue New Prescription</mat-card-title>
+    </div>
+  </mat-card-header>
+
+  <mat-card-content>
+    @if (loading) {
+      <div class="flex justify-center items-center p-8">
+        <mat-spinner></mat-spinner>
+      </div>
+    }
+    <form [formGroup]="prescriptionForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Medication Selection -->
+      <div class="bg-gray-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold mb-4 text-gray-700">Medication Information</h3>
+
+        @if (allMedications.length === 0 && !loading) {
+          <mat-error class="block text-red-600">No medications available</mat-error>
+        } @else {
+          <mat-form-field class="w-full">
+            <mat-label>Medication</mat-label>
+            <mat-select formControlName="medicationId" [disabled]="loading">
+              @for (medication of allMedications; track medication.id) {
+                <mat-option [value]="medication.id">{{ medication.tradeName }}</mat-option>
+              }
+            </mat-select>
+            <mat-icon matPrefix>medication</mat-icon>
+            @if (prescriptionForm.get('medicationId')?.hasError('required') && prescriptionForm.get('medicationId')?.touched) {
+              <mat-error>Medication is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="fill" class="w-full">
+            <mat-label>Quantity</mat-label>
+            <button mat-icon-button matPrefix type="button" (click)="decrementQuantity()" [disabled]="loading">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <input
+              type="number"
+              matInput
+              formControlName="quantity"
+              min="1"
+              class="text-center"
+              [disabled]="loading"
+            />
+            <button mat-icon-button matSuffix type="button" (click)="incrementQuantity()" [disabled]="loading">
+              <mat-icon>add</mat-icon>
+            </button>
+          </mat-form-field>
+          <div class="flex mb-5 justify-end">
+            <button mat-flat-button type="button" [disabled]="prescriptionForm.get('medicationId')?.value === '' || !prescriptionForm.get('quantity')?.valid || loading" (click)="addMedicationToPrescription()">Add Medication</button>
+          </div>
+          
+          @if (addedMedications.size > 0) {
+            <div class="bg-white p-4 rounded border mb-4">
+              <h4 class="font-semibold mb-3 text-gray-700">Added Medications</h4>
+              @for (entry of addedMedications | keyvalue; track entry.key.id) {
+                <div class="flex justify-between items-center py-2 border-b last:border-b-0">
+                  <div class="flex gap-3">
+                    <span class="font-medium">{{ entry.key.tradeName }}</span>
+                    <span class="text-gray-600">Quantity: {{ entry.value }}</span>
+                  </div>
+                  <button mat-icon-button type="button" color="warn" (click)="deleteMedicationFromPrescription(entry.key)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        }
+
+        <mat-form-field appearance="fill" class="w-full">
+          <mat-label>Patient ID</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="patientId"
+            placeholder="Enter patient ID"
+            [disabled]="loading"
+          />
+          <mat-icon matPrefix>person</mat-icon>
+          @if (prescriptionForm.get('patientId')?.hasError('required') && prescriptionForm.get('patientId')?.touched) {
+            <mat-error>Patient ID is required</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Expiration Date Selection -->
+        <mat-form-field class="w-full">
+          <mat-label>Expiration</mat-label>
+          <input
+            matInput
+            [matDatepicker]="expPicker"
+            formControlName="expiration"
+            [min]="getTomorrowDate()"
+            [disabled]="loading"
+          />
+          <mat-datepicker-toggle matSuffix [for]="expPicker" [disabled]="loading"></mat-datepicker-toggle>
+          <mat-datepicker #expPicker></mat-datepicker>
+          @if (prescriptionForm.get('expiration')?.hasError('required') && prescriptionForm.get('expiration')?.touched) {
+            <mat-error>Expiration date is required</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <div class="flex gap-3 pt-4 justify-end">
+        <button 
+          mat-flat-button
+          color="primary" 
+          type="submit"
+          [disabled]="addedMedications.size === 0 || !prescriptionForm.get('patientId')?.valid || !prescriptionForm.get('expiration')?.valid || loading">
+          <mat-icon class="mr-2">add_prescription</mat-icon>
+          Issue Prescription
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

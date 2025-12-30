@@ -95,21 +95,6 @@ export class PatientService {
     })
   }
 
-  completeVisit(input: string) {
-    const mutation = gql`
-      mutation CompleteVisit($input: String!) {
-        completeVisit(visitId: $input)
-      }
-    `;
-
-    return this.apollo.use('visit').mutate<{completeVisit: boolean}>({
-      mutation,
-      variables: {
-        input
-      }
-    })
-  }
-
   getPatientRecord(userId: string): Observable<ApolloClient.QueryResult<{ getPatientRecordByUserId: PatientInfo }>> {
     const query = gql`
       query GetPatientRecordByUserId($userId: ID!) {
