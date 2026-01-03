@@ -70,11 +70,15 @@ export class CreateAvailabilityComponent {
             control.setErrors(null);
           })
           this.updateAvailabilityEvent.emit();
-        } 
-      },
-      error: () => {
+        } else {
+          this.snackbar.openErrorSnackBar('Something went wrong')
+        }
+
         this.loading = false;
-    
+      },
+      error: (err) => {
+        this.loading = false;
+        alert(err)
       },
     });
   }

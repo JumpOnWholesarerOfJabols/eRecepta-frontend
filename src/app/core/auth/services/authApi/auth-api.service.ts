@@ -5,7 +5,7 @@ import { LoginData, ResetPasswordData, VerificationData } from '../../models/Cre
 import { PatientData } from '../../../models/UserData';
 import { MutationResponse } from '../../../models/graphql-data.model';
 import { LoginResponse, UniversalResponse } from '../../../models/ResponseData';
-import { ApolloClient, MutateResult } from '@apollo/client';
+import { ApolloClient } from '@apollo/client';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class AuthApiService {
   constructor(private apollo: Apollo) { }
 
   login(loginData: LoginData): Observable<ApolloClient.MutateResult<LoginResponse>> {
-    return this.apollo.mutate({
+    return this.apollo.use('auth').mutate({
       mutation: gql`
           mutation LoginUser($input: LoginInput!) {
             login(input: $input) {
@@ -31,7 +31,7 @@ export class AuthApiService {
   }
 
   registerUser(userData: PatientData): Observable<ApolloClient.MutateResult> {
-    return this.apollo.mutate({
+    return this.apollo.use('auth').mutate({
       mutation: gql`
         mutation RegisterUser($input: RegisterInput!) {
           register(input: $input) {
@@ -46,7 +46,7 @@ export class AuthApiService {
   }
 
   sendVerificationCode(login: string): Observable<ApolloClient.MutateResult> {
-    return this.apollo.mutate({
+    return this.apollo.use('auth').mutate({
       mutation: gql`
         mutation sendVerificationCodeRequest($input: SendVerificationCodeRequestInput!) {
           sendVerificationCodeRequest(input: $input) {
@@ -63,7 +63,7 @@ export class AuthApiService {
   }
 
   verifyUser(verificationData: VerificationData): Observable<ApolloClient.MutateResult> {
-    return this.apollo.mutate({
+    return this.apollo.use('auth').mutate({
       mutation: gql`
       mutation VerifyAccount($input: VerifyInput!){
         verifyAccount(input: $input) {
@@ -78,7 +78,7 @@ export class AuthApiService {
   }
 
   sendResetPasswordRequest(login: string): Observable<ApolloClient.MutateResult> {
-    return this.apollo.mutate({
+    return this.apollo.use('auth').mutate({
       mutation: gql`
         mutation ResetPasswordRequest($input: ResetPasswordRequestInput!) {
           requestPasswordReset(input: $input) {
@@ -96,7 +96,7 @@ export class AuthApiService {
   }
 
   resetPassword(resetData: ResetPasswordData): Observable<ApolloClient.MutateResult> {
-    return this.apollo.mutate({
+    return this.apollo.use('auth').mutate({
       mutation: gql`
         mutation ResetPassword($input: ResetPasswordInput!) {
           resetPassword(input: $input) {
