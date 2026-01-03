@@ -123,7 +123,7 @@ export class PrescriptionService {
   /**
    * Verify a prescription (for pharmacists)
    */
-  verifyPrescription(accessCode: string, patientIdentifier: string): Observable<any> {
+  verifyPrescription(accessCode: string, patientIdentifier: string) {
     const query = gql`
       query VerifyPrescription($accessCode: String!, $patientIdentifier: String!) {
         verifyPrescription(accessCode: $accessCode, patientIdentifier: $patientIdentifier) {
@@ -152,7 +152,7 @@ export class PrescriptionService {
   /**
    * Fulfill a prescription (for pharmacists)
    */
-  fulfillPrescription(input: FulfillPrescriptionInput): Observable<any> {
+  fulfillPrescription(input: FulfillPrescriptionInput) {
     const mutation = gql`
       mutation FulfillPrescription($input: FulfillPrescriptionInput!) {
         fulfillPrescription(input: $input) {
