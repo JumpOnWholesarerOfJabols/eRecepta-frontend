@@ -6,8 +6,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { PatientService } from '../../../../core/services/patientService/patient.service';
 import { SnackbarService } from '../../../../core/services/snackbarService/snackbar.service';
-import { PatientHistoryEntry, RevisionType, BloodType, PatientInfo } from '../../../../core/models/graphql-data.model';
+import { PatientHistoryEntry, RevisionType, BloodType, PatientInfo, PrescriptionStatus } from '../../../../core/models/graphql-data.model';
 import { AuthService } from '../../../../core/auth/services/authService/auth.service';
+import { PrescriptionService } from '../../../../core/services/prescriptionService/prescription.service';
+import { finalize, forkJoin } from 'rxjs';
+import { Prescription } from '../../../../core/models/graphql-data.model';
 
 @Component({
   selector: 'app-patient-history',
@@ -18,14 +21,17 @@ import { AuthService } from '../../../../core/auth/services/authService/auth.ser
 })
 export class PatientHistoryComponent implements OnInit {
   patientInfo: PatientInfo | null = null;
+  patientPrescritpions: Prescription[] = [];
   loading: boolean = false;
   REVISION_TYPE = RevisionType;
   BLOOD_TYPE = BloodType;
+  PRESCRIPTION_STATUS = PrescriptionStatus;
 
   constructor(
     private patientService: PatientService,
     private snackBar: SnackbarService,
-    private authService: AuthService
+    private authService: AuthService,
+    private prescriptionService: PrescriptionService
   ) { }
 
   ngOnInit(): void {
@@ -50,8 +56,24 @@ export class PatientHistoryComponent implements OnInit {
         this.loading = false;
       }
     });
+
+    forkJoin({
+      record: this.patientService.getPatientRecord(userId),
+      prescription: this.prescriptionService.getPrescriptions(this.authService.getUserId() ?? '')
+    }).pipe(
+      finalize(() => this.loading = false)
+    )
+    .subscribe({
+      next: (value) => {
+        if(value.prescription.data?.prescriptions && value.record.data?.getPatientRecordByUserId) {
+          this.patientInfo = value.record.data.getPatientRecordByUserId;
+          this.patientPrescritpions = value.prescription.data?.prescriptions
+        }
+      },
+      error: (err) => {
+        this.snackBar.openErrorSnackBar('unknown error')
+      }
+    })
   }
 
-
-  
 }
