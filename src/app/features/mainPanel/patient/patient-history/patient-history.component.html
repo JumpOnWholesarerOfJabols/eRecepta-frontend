@@ -1,5 +1,5 @@
 <div class="p-4">
-  <div *ngIf="loading" class="text-sm text-gray-500">Loading patient record...</div>
+  <div *ngIf="loading" class="text-sm text-gray-500">Loading patient info...</div>
 
   <div *ngIf="!loading && !patientInfo" class="text-sm text-gray-500">No patient record found.</div>
 
@@ -60,5 +60,80 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Prescriptions List -->
+  <div *ngIf="patientPrescritpions.length > 0" class="mt-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">My Prescriptions</h3>
+    
+    <div class="space-y-3">
+      <div *ngFor="let prescription of patientPrescritpions" 
+           class="bg-white rounded-lg shadow-md transition-shadow p-4 border-l-4"
+           [ngClass]="{
+             'border-green-500': prescription.status === 'FILLED',
+             'border-blue-500': prescription.status === 'ISSUED',
+             'border-yellow-500': prescription.status === 'PARTIALLY_FILLED',
+             'border-red-500': prescription.status === 'CANCELLED' || prescription.status === 'EXPIRED'
+           }">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-3">
+          <!-- Prescription ID -->
+          <div class="flex flex-col min-w-0">
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Prescription ID</span>
+            <span class="text-md font-medium text-gray-900 mt-1 truncate">{{ prescription.id }}</span>
+          </div>
+
+          <!-- Access Code -->
+          <div class="flex flex-col min-w-0">
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Access Code</span>
+            <span class="text-md font-bold text-gray-900 mt-1 font-mono">{{ prescription.accessCode }}</span>
+          </div>
+
+          <!-- Status -->
+          <div class="flex flex-col min-w-0">
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</span>
+            <span class="inline-block text-xs font-semibold mt-1 px-3 py-1 rounded-full w-fit"
+                  [ngClass]="{
+                    'bg-green-100 text-green-800': prescription.status === 'FILLED',
+                    'bg-blue-100 text-blue-800': prescription.status === 'ISSUED',
+                    'bg-yellow-100 text-yellow-800': prescription.status === 'PARTIALLY_FILLED',
+                    'bg-red-100 text-red-800': prescription.status === 'CANCELLED' || prescription.status === 'EXPIRED'
+                  }">
+              {{ prescription.status }}
+            </span>
+          </div>
+
+          <!-- Packages -->
+          <div class="flex flex-col min-w-0">
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Packages</span>
+            <span class="text-md font-medium text-gray-900 mt-1">
+              {{ prescription.filledPackages }} / {{ prescription.totalPackages }}
+              <span class="text-xs text-gray-500">({{ prescription.remainingPackages }} left)</span>
+            </span>
+          </div>
+        </div>
+
+        <mat-divider class="my-3"></mat-divider>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
+          <!-- Created Date -->
+          <div class="flex flex-col min-w-0">
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Created</span>
+            <span class="text-sm text-gray-900 mt-1">{{ prescription.createdAt | date:'dd.MM.yyyy HH:mm' }}</span>
+          </div>
+
+          <!-- Expiration Date -->
+          <div class="flex flex-col min-w-0">
+            <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Expires</span>
+            <span class="text-sm text-gray-900 mt-1">{{ prescription.expiresAt | date:'dd.MM.yyyy HH:mm' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- No Prescriptions Message -->
+  <div *ngIf="!loading && patientPrescritpions.length === 0" class="mt-6 bg-gray-50 rounded-lg p-6 text-center border">
+    <mat-icon class="text-gray-400 mb-2" style="font-size: 48px; height: 48px; width: 48px;">receipt_long</mat-icon>
+    <p class="text-sm text-gray-500">No prescriptions found</p>
   </div>
 </div>
