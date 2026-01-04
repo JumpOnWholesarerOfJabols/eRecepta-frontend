@@ -10,6 +10,7 @@ import { IssuePrescriptionComponent } from './issue-prescription/issue-prescript
 import { PrescriptionListComponent } from './prescription-list/prescription-list.component';
 import { Subject } from 'rxjs';
 import { ManageSpecializationComponent } from "./manage-specialization/manage-specialization.component";
+import { ManagePatientInfoComponent } from './manage-patient-info/manage-patient-info.component';
 
 enum ACTIONS {
   AVAILABILITY,
@@ -17,6 +18,7 @@ enum ACTIONS {
   MANAGE_SPECIALIZATION,
   ISSUE_PRESCRIPTION,
   PRESCRIPTION_HISTORY,
+  MANAGE_PATIENT_INFO,
 }
 
 @Component({
@@ -32,7 +34,8 @@ enum ACTIONS {
     DoctorAppointmentListComponent, 
     ManageSpecializationComponent,
     IssuePrescriptionComponent,
-    PrescriptionListComponent
+    PrescriptionListComponent,
+    ManagePatientInfoComponent
   ],
   templateUrl: './doctor-dashboard.component.html',
   styleUrl: './doctor-dashboard.component.css'
@@ -62,6 +65,10 @@ export class DoctorDashboardComponent {
 
   showPrescriptionHistory() {
     this.action = ACTIONS.PRESCRIPTION_HISTORY;
+  }
+
+  showManagePatientInfo() {
+    this.action = ACTIONS.MANAGE_PATIENT_INFO;
   }
 
   updateAvailability() {
