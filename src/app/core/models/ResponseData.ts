@@ -53,3 +53,10 @@ export interface AllWeeklyAvailabilitiesResponse {
   findAllWeeklyAvailabilities: WeeklyAvailability[];
 }
 
+export interface DoctorData {
+    doctorId: string
+    firstName: string
+    lastName: string
+    email: string
+}
+
