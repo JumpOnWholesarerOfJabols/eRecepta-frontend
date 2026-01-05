@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Specialization, Visit, CreateVisitInput, PatientHistoryEntry, PatientInfo, UpdatePatientInfoInput } from '../../models/graphql-data.model';
 import { ApolloClient } from '@apollo/client';
-import { AllWeeklyAvailabilitiesResponse, WeeklyAvailability } from '../../models/ResponseData';
+import { AllWeeklyAvailabilitiesResponse, DoctorData, WeeklyAvailability } from '../../models/ResponseData';
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +13,19 @@ export class PatientService {
 
   constructor(private apollo: Apollo) { }
 
-  findAllDoctors(specialization: string): Observable<ApolloClient.QueryResult<{findAllDoctors: string[]}>> {
+  findAllDoctors(specialization: string): Observable<ApolloClient.QueryResult<{findAllDoctors: DoctorData[]}>> {
     const query = gql`
       query FindAllDoctors($specialization: Specialization!) {
-        findAllDoctors(specialization: $specialization)
+        findAllDoctors(specialization: $specialization) {
+          doctorId
+          firstName
+          lastName
+          email
+        }
       }
     `;
 
-    return this.apollo.use('visit').query<{findAllDoctors: string[]}>({
+    return this.apollo.use('visit').query<{findAllDoctors: DoctorData[]}>({
       query,
       variables: {
         specialization
