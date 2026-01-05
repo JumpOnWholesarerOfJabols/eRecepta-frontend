@@ -153,6 +153,13 @@ export interface PatientHistoryEntry {
   patientState: PatientInfo;
 }
 
+export interface UpdatePatientInfoInput {
+  bloodType: BloodType;
+  height: number;
+  weight: number;
+  emergencyContact: string;
+}
+
 export interface CreateWeeklyAvailabilityInput{
     dayOfWeek: DayOfWeek
     startTime: String

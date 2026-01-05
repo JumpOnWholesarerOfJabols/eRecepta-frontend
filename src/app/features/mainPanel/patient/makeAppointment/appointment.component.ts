@@ -7,7 +7,7 @@ import { CreateVisitInput } from '../../../../core/models/graphql-data.model';
 import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { DayOfWeek, WeeklyAvailability } from '../../../../core/models/ResponseData';
+import { DayOfWeek, DoctorData, WeeklyAvailability } from '../../../../core/models/ResponseData';
 import { MatButton } from "@angular/material/button";
 import { visit } from 'graphql';
 import { SnackbarService } from '../../../../core/services/snackbarService/snackbar.service';
@@ -40,7 +40,7 @@ interface AppointmentForm {
 export class AppointmentComponent {
   appointmentForm: FormGroup<AppointmentForm>;
   specializations = Object.values(Specialization);
-  doctors: string[] = [];
+  doctors: DoctorData[] = [];
   availability: WeeklyAvailability[] = [];
 
   chosenDate!: Date;

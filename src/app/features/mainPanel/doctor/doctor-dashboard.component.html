@@ -35,8 +35,10 @@
 						<button mat-flat-button color="primary" class="w-full" (click)="showPrescriptionHistory()">
 							<mat-icon>history</mat-icon>
 							<span class="ml-2">Prescription History</span>
-						</button>
-					</div>
+						</button>					<button mat-flat-button color="primary" class="w-full" (click)="showManagePatientInfo()">
+						<mat-icon>person_add</mat-icon>
+						<span class="ml-2">Manage Patient Info</span>
+					</button>					</div>
 				</mat-card-content>
 			</mat-card>
 		</nav>
@@ -59,6 +61,8 @@
 				<app-issue-prescription></app-issue-prescription>
 			} @else if (action === ACTIONS.PRESCRIPTION_HISTORY) {
 				<app-prescription-list></app-prescription-list>
+			} @else if (action === ACTIONS.MANAGE_PATIENT_INFO) {
+				<app-manage-patient-info></app-manage-patient-info>
 			}
 		</main>
 	</div>

@@ -1,0 +1,130 @@
+<mat-card class="shadow-md">
+  <mat-card-header class="mb-4">
+    <mat-card-title class="flex items-center gap-2">
+      <mat-icon class="text-primary">person_add</mat-icon>
+      <span>Manage Patient Information</span>
+    </mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="patientInfoForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <!-- Patient User ID -->
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Patient User ID</mat-label>
+        <mat-icon matPrefix>badge</mat-icon>
+        <input 
+          matInput 
+          formControlName="userId" 
+          placeholder="Enter patient's user ID"
+          required
+        >
+        <mat-error *ngIf="patientInfoForm.get('userId')?.hasError('required')">
+          Patient User ID is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Blood Type -->
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Blood Type</mat-label>
+        <mat-icon matPrefix>water_drop</mat-icon>
+        <mat-select formControlName="bloodType" required>
+          <mat-option *ngFor="let type of bloodTypes" [value]="type">
+            {{ type.replace('_', ' ') }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="patientInfoForm.get('bloodType')?.hasError('required')">
+          Blood type is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Height and Weight Row -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Height -->
+        <mat-form-field class="w-full" appearance="fill">
+          <mat-label>Height (cm)</mat-label>
+          <mat-icon matPrefix>height</mat-icon>
+          <input 
+            matInput 
+            type="number" 
+            formControlName="height" 
+            placeholder="Enter height in cm"
+            required
+            min="50"
+            max="250"
+          >
+          <mat-error *ngIf="patientInfoForm.get('height')?.hasError('required')">
+            Height is required
+          </mat-error>
+          <mat-error *ngIf="patientInfoForm.get('height')?.hasError('min')">
+            Height must be at least 50 cm
+          </mat-error>
+          <mat-error *ngIf="patientInfoForm.get('height')?.hasError('max')">
+            Height must not exceed 250 cm
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Weight -->
+        <mat-form-field class="w-full" appearance="fill">
+          <mat-label>Weight (kg)</mat-label>
+          <mat-icon matPrefix>monitor_weight</mat-icon>
+          <input 
+            matInput 
+            type="number" 
+            formControlName="weight" 
+            placeholder="Enter weight in kg"
+            required
+            min="20"
+            max="300"
+          >
+          <mat-error *ngIf="patientInfoForm.get('weight')?.hasError('required')">
+            Weight is required
+          </mat-error>
+          <mat-error *ngIf="patientInfoForm.get('weight')?.hasError('min')">
+            Weight must be at least 20 kg
+          </mat-error>
+          <mat-error *ngIf="patientInfoForm.get('weight')?.hasError('max')">
+            Weight must not exceed 300 kg
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Emergency Contact -->
+      <mat-form-field class="w-full" appearance="fill">
+        <mat-label>Emergency Contact</mat-label>
+        <mat-icon matPrefix>contact_phone</mat-icon>
+        <input 
+          matInput 
+          formControlName="emergencyContact" 
+          placeholder="Enter emergency contact number or email"
+          required
+        >
+        <mat-error *ngIf="patientInfoForm.get('emergencyContact')?.hasError('required')">
+          Emergency contact is required
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Action Buttons -->
+      <div class="flex gap-3 justify-end mt-6">
+        <button 
+          mat-stroked-button 
+          type="button" 
+          (click)="onReset()"
+          [disabled]="loading"
+        >
+          <mat-icon>refresh</mat-icon>
+          Reset
+        </button>
+        <button 
+          mat-flat-button 
+          color="primary" 
+          type="submit"
+          [disabled]="loading || patientInfoForm.invalid"
+        >
+          <mat-icon *ngIf="!loading">save</mat-icon>
+          <mat-spinner *ngIf="loading" diameter="20" class="inline-block mr-2"></mat-spinner>
+          {{ loading ? 'Updating...' : 'Update Patient Info' }}
+        </button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

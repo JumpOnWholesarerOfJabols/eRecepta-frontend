@@ -36,7 +36,7 @@
                     <mat-label>Doctor</mat-label>
                     <mat-select formControlName="doctor" (selectionChange)="onDoctorChange()" [disabled]="loading">
                         @for (doc of doctors; track doc) {
-                        <mat-option [value]="doc">{{ doc }}</mat-option>
+                        <mat-option [value]="doc.doctorId">{{ doc.firstName }} {{doc.lastName}}</mat-option>
                         }
                     </mat-select>
                 </mat-form-field>

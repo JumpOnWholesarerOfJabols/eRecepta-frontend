@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Specialization, Visit, CreateVisitInput, PatientHistoryEntry, PatientInfo } from '../../models/graphql-data.model';
+import { Specialization, Visit, CreateVisitInput, PatientHistoryEntry, PatientInfo, UpdatePatientInfoInput } from '../../models/graphql-data.model';
 import { ApolloClient } from '@apollo/client';
-import { AllWeeklyAvailabilitiesResponse, WeeklyAvailability } from '../../models/ResponseData';
+import { AllWeeklyAvailabilitiesResponse, DoctorData, WeeklyAvailability } from '../../models/ResponseData';
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +13,19 @@ export class PatientService {
 
   constructor(private apollo: Apollo) { }
 
-  findAllDoctors(specialization: string): Observable<ApolloClient.QueryResult<{findAllDoctors: string[]}>> {
+  findAllDoctors(specialization: string): Observable<ApolloClient.QueryResult<{findAllDoctors: DoctorData[]}>> {
     const query = gql`
       query FindAllDoctors($specialization: Specialization!) {
-        findAllDoctors(specialization: $specialization)
+        findAllDoctors(specialization: $specialization) {
+          doctorId
+          firstName
+          lastName
+          email
+        }
       }
     `;
 
-    return this.apollo.use('visit').query<{findAllDoctors: string[]}>({
+    return this.apollo.use('visit').query<{findAllDoctors: DoctorData[]}>({
       query,
       variables: {
         specialization
@@ -115,6 +120,31 @@ export class PatientService {
       query,
       variables: {
         userId
+      }
+    });
+  }
+
+  updatePatientInfo(userId: string, input: UpdatePatientInfoInput): Observable<ApolloClient.MutateResult<{ updatePatientInfo: PatientInfo }>> {
+    const mutation = gql`
+      mutation UpdatePatientInfo($userId: ID!, $input: UpdatePatientInfoInput!) {
+        updatePatientInfo(userId: $userId, input: $input) {
+          userId
+          bloodType
+          height
+          weight
+          allergies
+          chronicDiseases
+          medications
+          emergencyContact
+        }
+      }
+    `;
+
+    return this.apollo.use('patientRecord').mutate<{ updatePatientInfo: PatientInfo }>({
+      mutation,
+      variables: {
+        userId,
+        input
       }
     });
   }

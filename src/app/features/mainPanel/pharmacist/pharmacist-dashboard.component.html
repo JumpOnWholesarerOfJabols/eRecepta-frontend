@@ -1,0 +1,89 @@
+<section class="min-h-screen bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <mat-icon class="text-primary">local_pharmacy</mat-icon>
+                <h1 class="text-2xl sm:text-3xl font-semibold text-gray-900">Pharmacist Dashboard</h1>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <mat-card class="shadow-sm">
+            <mat-card-header class="mb-6 border-b border-gray-200 pb-4">
+                <mat-card-title>Find Prescription</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <form class="flex flex-col items-center gap-4" [formGroup]="verifyForm" (ngSubmit)="verifyPrescription()">
+                    <mat-form-field appearance="fill" class="w-full sm:w-1/2">
+                        <mat-label>Access code</mat-label>
+                        <input matInput formControlName="accessCode" type="text">
+                    </mat-form-field>
+                    <mat-form-field appearance="fill" class="w-full sm:w-1/2">
+                        <mat-label>Patient login</mat-label>
+                        <input matInput formControlName="patientIdentifier" type="text">
+                    </mat-form-field>
+                    <button mat-flat-button color="primary" type="submit" class="mt-2">
+                        <mat-icon>search</mat-icon>
+                        <span class="ml-2">Verify</span>
+                    </button>
+                </form>
+            </mat-card-content>
+        </mat-card>
+
+        <!-- Results -->
+        <div class="mt-6">
+            @if (loading) {
+                <div class="flex justify-center py-12">
+                    <mat-spinner></mat-spinner>
+                </div>
+            } @else if (patientPrescription) {
+                <mat-card class="shadow-sm">
+                    <mat-card-header class="border-b border-gray-200 pb-4">
+                        <mat-card-title>Prescription Details</mat-card-title>
+                    </mat-card-header>
+                    <mat-card-content>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 mt-4">
+                            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                <p class="text-sm font-medium text-gray-600">Medication Name</p>
+                                <p class="text-lg font-semibold text-gray-900 mt-1">{{patientPrescription.medicationId}}</p>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                <p class="text-sm font-medium text-gray-600">Status</p>
+                                <p class="text-lg font-semibold text-gray-900 mt-1">{{patientPrescription.status}}</p>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                <p class="text-sm font-medium text-gray-600">Total Packages</p>
+                                <p class="text-lg font-semibold text-gray-900 mt-1">{{patientPrescription.totalPackages}}</p>
+                            </div>
+                            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                                <p class="text-sm font-medium text-gray-600">Filled Packages</p>
+                                <p class="text-lg font-semibold text-gray-900 mt-1">{{patientPrescription.filledPackages}}</p>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 pt-6 border-t border-gray-200">
+                            <form class="flex flex-col sm:flex-row items-center gap-4" (ngSubmit)="fulfill()" [formGroup]="fulfillForm">
+                                <mat-form-field appearance="fill" subscriptSizing="dynamic" class="w-full sm:w-auto sm:flex-1 max-w-xs">
+                                    <mat-label>Quantity to fulfill</mat-label>
+                                    <input matInput type="number" formControlName="quantity" min="1">
+                                </mat-form-field>
+                                <button mat-flat-button color="warn" type="submit">
+                                    <mat-icon>check_circle</mat-icon>
+                                    <span class="ml-2">Fulfill</span>
+                                </button>
+                            </form>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            } @else {
+                <div class="text-center py-12">
+                    <mat-icon class="text-gray-300 text-6xl mb-4">search</mat-icon>
+                    <p class="text-gray-500 text-lg">Please enter prescription details above to get started</p>
+                </div>
+            }
+        </div>
+    </div>
+</section>
