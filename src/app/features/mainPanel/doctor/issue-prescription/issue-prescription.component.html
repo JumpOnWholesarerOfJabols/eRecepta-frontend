@@ -3,8 +3,10 @@
     <div class="flex items-center space-x-2">
       <mat-icon class="text-primary">add_circle</mat-icon>
       <mat-card-title>Issue New Prescription</mat-card-title>
+      
     </div>
   </mat-card-header>
+  <span class="text-md text-gray-500 ml-3 italic font-bold underline">Enter patient ID before adding meds to check interactions correctly.</span>
 
   <mat-card-content>
     @if (loading) {
@@ -51,7 +53,11 @@
             </button>
           </mat-form-field>
           <div class="flex mb-5 justify-end">
-            <button mat-flat-button type="button" [disabled]="prescriptionForm.get('medicationId')?.value === '' || !prescriptionForm.get('quantity')?.valid || loading" (click)="addMedicationToPrescription()">Add Medication</button>
+            <button mat-flat-button type="button" [disabled]="prescriptionForm.get('medicationId')?.value === '' || !prescriptionForm.get('quantity')?.valid || loading || checkingInteractions" (click)="addMedicationToPrescription()">
+              <mat-icon *ngIf="!checkingInteractions">add</mat-icon>
+              <mat-spinner *ngIf="checkingInteractions" diameter="18" class="inline-block mr-2"></mat-spinner>
+              {{ checkingInteractions ? 'Checking...' : 'Add Medication' }}
+            </button>
           </div>
           
           @if (addedMedications.size > 0) {

@@ -23,6 +23,17 @@
         </mat-error>
       </mat-form-field>
 
+      <div class="flex gap-3 items-center">
+        <button mat-stroked-button type="button" (click)="loadPatientInfo()" [disabled]="loadingInfo || !patientInfoForm.value.userId">
+          <mat-icon *ngIf="!loadingInfo">search</mat-icon>
+          <mat-spinner *ngIf="loadingInfo" diameter="18" class="inline-block mr-2"></mat-spinner>
+          {{ loadingInfo ? 'Loading...' : 'Load Patient Info' }}
+        </button>
+        <span *ngIf="patientInfo" class="text-xs text-gray-500">Loaded record for: {{ patientInfo.userId }}</span>
+      </div>
+
+      <!-- Show details only after patient info is loaded -->
+      <ng-container *ngIf="patientInfo">
       <!-- Blood Type -->
       <mat-form-field class="w-full" appearance="fill">
         <mat-label>Blood Type</mat-label>
@@ -125,6 +136,71 @@
           {{ loading ? 'Updating...' : 'Update Patient Info' }}
         </button>
       </div>
+      </ng-container>
     </form>
+  </mat-card-content>
+
+  <mat-card-content class="mt-6" *ngIf="patientInfo">
+    <div [formGroup]="patientInfoForm">
+    <!-- Allergies Management -->
+    <div class="mb-6">
+      <div class="flex items-center gap-2 mb-2">
+        <mat-icon class="text-red-600">medication</mat-icon>
+        <span class="font-semibold">Allergies</span>
+      </div>
+      <div class="flex gap-2 items-center">
+        <mat-form-field class="flex-1" appearance="fill">
+          <mat-label>Add allergy</mat-label>
+          <input matInput formControlName="newAllergy" placeholder="e.g. Penicillin">
+        </mat-form-field>
+        <button mat-flat-button color="warn" (click)="addAllergy()" [disabled]="busyAllergy || !patientInfoForm.value.newAllergy">
+          <mat-icon *ngIf="!busyAllergy">add</mat-icon>
+          <mat-spinner *ngIf="busyAllergy" diameter="18" class="inline-block mr-2"></mat-spinner>
+          {{ busyAllergy ? 'Adding...' : 'Add' }}
+        </button>
+      </div>
+      <div class="mt-3 flex flex-wrap gap-2" *ngIf="patientInfo.allergies.length; else noAllergies">
+        <span *ngFor="let a of patientInfo.allergies" class="inline-flex items-center text-sm px-2 py-1 bg-red-50 text-red-700 rounded-full border">
+          {{ a }}
+          <button type="button" class="ml-1" (click)="removeAllergy(a)" [disabled]="busyAllergy" mat-icon-button>
+            <mat-icon class="text-red-700">close</mat-icon>
+          </button>
+        </span>
+      </div>
+      <ng-template #noAllergies>
+        <div class="text-sm text-gray-500 mt-2">None recorded</div>
+      </ng-template>
+    </div>
+
+    <!-- Chronic Diseases Management -->
+    <div>
+      <div class="flex items-center gap-2 mb-2">
+        <mat-icon class="text-amber-600">healing</mat-icon>
+        <span class="font-semibold">Chronic Diseases</span>
+      </div>
+      <div class="flex gap-2 items-center">
+        <mat-form-field class="flex-1" appearance="fill">
+          <mat-label>Add disease</mat-label>
+          <input matInput formControlName="newDisease" placeholder="e.g. Diabetes">
+        </mat-form-field>
+        <button mat-flat-button color="primary" (click)="addDisease()" [disabled]="busyDisease || !patientInfoForm.value.newDisease">
+          <mat-icon *ngIf="!busyDisease">add</mat-icon>
+          <mat-spinner *ngIf="busyDisease" diameter="18" class="inline-block mr-2"></mat-spinner>
+          {{ busyDisease ? 'Adding...' : 'Add' }}
+        </button>
+      </div>
+      <div class="mt-3 flex flex-wrap gap-2" *ngIf="patientInfo.chronicDiseases.length; else noDiseases">
+        <span *ngFor="let d of patientInfo.chronicDiseases" class="inline-flex items-center text-sm px-2 py-1 bg-amber-50 text-amber-700 rounded-full border">
+          {{ d }}
+          <button type="button" class="ml-1" (click)="removeDisease(d)" [disabled]="busyDisease" mat-icon-button>
+            <mat-icon class="text-amber-700">close</mat-icon>
+          </button>
+        </span>
+      </div>
+      <ng-template #noDiseases>
+        <div class="text-sm text-gray-500 mt-2">None recorded</div>
+      </ng-template>
+    </div>
+    </div>
   </mat-card-content>
 </mat-card>
