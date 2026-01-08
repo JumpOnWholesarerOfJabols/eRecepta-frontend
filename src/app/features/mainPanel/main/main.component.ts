@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { AuthService } from '../../../core/auth/services/authService/auth.service';
 import { Router, RouterOutlet } from '@angular/router';
 import { Role } from '../../../core/models/UserData';
+import { AppHeaderComponent } from '../../../shared/components/app-header/app-header.component';
 
 
 @Component({
   selector: 'app-main',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, AppHeaderComponent],
   templateUrl: './main.component.html',
   styleUrl: './main.component.css'
 })
