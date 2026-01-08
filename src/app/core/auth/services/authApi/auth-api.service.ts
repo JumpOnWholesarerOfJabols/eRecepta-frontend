@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { LoginData, ResetPasswordData, VerificationData } from '../../models/CredentialsData';
 import { PatientData } from '../../../models/UserData';
 import { MutationResponse } from '../../../models/graphql-data.model';
-import { LoginResponse, UniversalResponse } from '../../../models/ResponseData';
+import { LoginResponse, UniversalResponse, RefreshTokenResponse } from '../../../models/ResponseData';
 import { ApolloClient } from '@apollo/client';
 
 @Injectable({
@@ -21,11 +21,59 @@ export class AuthApiService {
             login(input: $input) {
               token
               expiresAt
+              refreshToken
             }
           }
         `,
       variables: {
         input: loginData
+      }
+    })
+  }
+
+  refreshToken(refreshToken: string): Observable<ApolloClient.MutateResult<RefreshTokenResponse>> {
+    return this.apollo.use('auth').mutate({
+      mutation: gql`
+        mutation RefreshToken($refreshToken: String!) {
+          refreshToken(refreshToken: $refreshToken) {
+            token
+            expiresAt
+            refreshToken
+          }
+        }
+      `,
+      variables: {
+        refreshToken
+      }
+    })
+  }
+
+  logout(refreshToken: string): Observable<ApolloClient.MutateResult> {
+    return this.apollo.use('auth').mutate({
+      mutation: gql`
+        mutation Logout($refreshToken: String!) {
+          logout(refreshToken: $refreshToken) {
+            message
+          }
+        }
+      `,
+      variables: {
+        refreshToken
+      }
+    })
+  }
+
+  logoutFromOtherDevices(refreshToken: string): Observable<ApolloClient.MutateResult> {
+    return this.apollo.use('auth').mutate({
+      mutation: gql`
+        mutation LogoutFromOtherDevices($refreshToken: String!) {
+          logoutFromOtherDevices(refreshToken: $refreshToken) {
+            message
+          }
+        }
+      `,
+      variables: {
+        refreshToken
       }
     })
   }
@@ -108,6 +156,38 @@ export class AuthApiService {
         input: resetData
       }
 
+    })
+  }
+
+  getMyLoginAttempts(): Observable<ApolloClient.MutateResult> {
+    return this.apollo.use('auth').query({
+      query: gql`
+        query GetMyLoginAttempts {
+          myLoginAttempts {
+            id
+            userId
+            ipAddress
+            success
+            attemptDate
+          }
+        }
+      `
+    })
+  }
+
+  getMyAuditLogs(): Observable<ApolloClient.MutateResult> {
+    return this.apollo.use('auth').query({
+      query: gql`
+        query GetMyAuditLogs {
+          myAuditLogs {
+            id
+            userId
+            ipAddress
+            actionName
+            logDate
+          }
+        }
+      `
     })
   }
 }
