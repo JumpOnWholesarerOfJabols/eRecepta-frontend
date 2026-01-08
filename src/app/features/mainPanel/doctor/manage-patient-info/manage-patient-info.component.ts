@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { PatientService } from '../../../../core/services/patientService/patient.service';
 import { SnackbarService } from '../../../../core/services/snackbarService/snackbar.service';
-import { BloodType, UpdatePatientInfoInput } from '../../../../core/models/graphql-data.model';
+import { BloodType, UpdatePatientInfoInput, PatientInfo } from '../../../../core/models/graphql-data.model';
 
 @Component({
   selector: 'app-manage-patient-info',
@@ -33,6 +33,10 @@ export class ManagePatientInfoComponent implements OnInit {
   patientInfoForm!: FormGroup;
   loading = false;
   bloodTypes = Object.values(BloodType);
+  loadingInfo = false;
+  busyAllergy = false;
+  busyDisease = false;
+  patientInfo: PatientInfo | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -50,7 +54,38 @@ export class ManagePatientInfoComponent implements OnInit {
       bloodType: ['', Validators.required],
       height: [null, [Validators.required, Validators.min(50), Validators.max(250)]],
       weight: [null, [Validators.required, Validators.min(20), Validators.max(300)]],
-      emergencyContact: ['', Validators.required]
+      emergencyContact: ['', Validators.required],
+      newAllergy: [''],
+      newDisease: ['']
+    });
+  }
+
+  loadPatientInfo(): void {
+    const userId = this.patientInfoForm.value.userId;
+    if (!userId) {
+      this.snackbar.openErrorSnackBar('Patient User ID is required');
+      return;
+    }
+    this.loadingInfo = true;
+    this.patientService.getPatientRecord(userId).subscribe({
+      next: (result) => {
+        const info = result.data?.getPatientRecordByUserId || null;
+        this.patientInfo = info;
+        if (info) {
+          this.patientInfoForm.patchValue({
+            bloodType: info.bloodType,
+            height: info.height,
+            weight: info.weight,
+            emergencyContact: info.emergencyContact
+          });
+        }
+        this.loadingInfo = false;
+      },
+      error: (error) => {
+        console.error('Error loading patient info:', error);
+        this.snackbar.openErrorSnackBar('Failed to load patient info');
+        this.loadingInfo = false;
+      }
     });
   }
 
@@ -89,5 +124,106 @@ export class ManagePatientInfoComponent implements OnInit {
 
   onReset(): void {
     this.patientInfoForm.reset();
+    this.patientInfo = null;
+  }
+
+  addAllergy(): void {
+    const userId = this.patientInfoForm.value.userId;
+    const allergy = (this.patientInfoForm.value.newAllergy || '').trim();
+    if (!userId || !allergy) {
+      this.snackbar.openErrorSnackBar('Provide user ID and allergy');
+      return;
+    }
+    this.busyAllergy = true;
+    this.patientService.addAllergy(userId, allergy).subscribe({
+      next: (result) => {
+        const updated = result.data?.addAllergy || null;
+        if (updated) {
+          this.patientInfo = updated;
+          this.patientInfoForm.patchValue({ newAllergy: '' });
+          this.snackbar.openSnackBar('Allergy added');
+        }
+        this.busyAllergy = false;
+      },
+      error: (error) => {
+        console.error('Error adding allergy:', error);
+        this.snackbar.openErrorSnackBar('Failed to add allergy');
+        this.busyAllergy = false;
+      }
+    });
+  }
+
+  removeAllergy(allergy: string): void {
+    const userId = this.patientInfoForm.value.userId;
+    if (!userId) {
+      this.snackbar.openErrorSnackBar('Patient User ID is required');
+      return;
+    }
+    this.busyAllergy = true;
+    this.patientService.removeAllergy(userId, allergy).subscribe({
+      next: (result) => {
+        const updated = result.data?.removeAllergy || null;
+        if (updated) {
+          this.patientInfo = updated;
+          this.snackbar.openSnackBar('Allergy removed');
+        }
+        this.busyAllergy = false;
+      },
+      error: (error) => {
+        console.error('Error removing allergy:', error);
+        this.snackbar.openErrorSnackBar('Failed to remove allergy');
+        this.busyAllergy = false;
+      }
+    });
+  }
+
+  addDisease(): void {
+    const userId = this.patientInfoForm.value.userId;
+    const disease = (this.patientInfoForm.value.newDisease || '').trim();
+    if (!userId || !disease) {
+      this.snackbar.openErrorSnackBar('Provide user ID and disease');
+      return;
+    }
+    this.busyDisease = true;
+    this.patientService.addChronicDisease(userId, disease).subscribe({
+      next: (result) => {
+        const updated = result.data?.addChronicDisease || null;
+        if (updated) {
+          this.patientInfo = updated;
+          this.patientInfoForm.patchValue({ newDisease: '' });
+          this.snackbar.openSnackBar('Chronic disease added');
+        }
+        this.busyDisease = false;
+      },
+      error: (error) => {
+        console.error('Error adding chronic disease:', error);
+        this.snackbar.openErrorSnackBar('Failed to add chronic disease');
+        this.busyDisease = false;
+      }
+    });
+  }
+
+  removeDisease(disease: string): void {
+    const userId = this.patientInfoForm.value.userId;
+    if (!userId) {
+      this.snackbar.openErrorSnackBar('Patient User ID is required');
+      return;
+    }
+    this.busyDisease = true;
+    this.patientService.removeChronicDisease(userId, disease).subscribe({
+      next: (result) => {
+        const updated = result.data?.removeChronicDisease || null;
+        if (updated) {
+          this.patientInfo = updated;
+          this.snackbar.openSnackBar('Chronic disease removed');
+        }
+        this.busyDisease = false;
+      },
+      error: (error) => {
+        console.error('Error removing chronic disease:', error);
+        this.snackbar.openErrorSnackBar('Failed to remove chronic disease');
+        this.busyDisease = false;
+      }
+    });
   }
 }

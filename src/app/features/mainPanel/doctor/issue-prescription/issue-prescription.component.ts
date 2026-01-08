@@ -16,8 +16,12 @@ import { IssuePrescriptionInput, Prescription } from '../../../../core/models/gr
 import { SnackbarService } from '../../../../core/services/snackbarService/snackbar.service';
 import { formatDate } from '../../../../shared/utils/dateFormatter';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { forkJoin, Observable } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
+import { switchMap, map } from 'rxjs/operators';
 import { Apollo } from 'apollo-angular';
+import { PatientService } from '../../../../core/services/patientService/patient.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialog } from '../../../../shared/components/confirm/confirm.dialog';
 
 @Component({
   selector: 'app-issue-prescription',
@@ -41,6 +45,7 @@ import { Apollo } from 'apollo-angular';
 })
 export class IssuePrescriptionComponent implements OnInit {
   loading = false;
+  checkingInteractions = false;
 
   prescriptionForm!: FormGroup;
   allMedications: Medication[] = [];
@@ -56,7 +61,9 @@ export class IssuePrescriptionComponent implements OnInit {
     private fb: FormBuilder,
     private medicationService: MedicationService,
     private prescriptionService: PrescriptionService,
-    private snackbar: SnackbarService
+    private patientService: PatientService,
+    private snackbar: SnackbarService,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -112,17 +119,67 @@ export class IssuePrescriptionComponent implements OnInit {
     }
 
     const newMedication = this.allMedications.find(m => m.id === medicationId);
-    if (newMedication) {
-      if (this.addedMedications.has(newMedication)) {
-        this.snackbar.openSnackBar('This medication has already been added');
-        return;
-      }
-      this.addedMedications.set(newMedication, quantity);
-      this.snackbar.openSnackBar('Medication added successfully', 2000);
+    if (!newMedication) { return; }
+
+    if (this.addedMedications.has(newMedication)) {
+      this.snackbar.openSnackBar('This medication has already been added');
+      return;
     }
 
-    medicationControl?.reset('');
-    quantityControl?.reset(1);
+    const patientId = this.prescriptionForm.get('patientId')?.value as string | undefined;
+    const addedIds = Array.from(this.addedMedications.keys()).map(m => m.id);
+    const baseIds$ = patientId 
+      ? this.patientService.getPatientRecord(patientId).pipe(map(res => res.data?.getPatientRecordByUserId?.medications ?? []))
+      : of([] as string[]);
+
+    this.checkingInteractions = true;
+    baseIds$.pipe(
+      switchMap((currentIds) => {
+        const set = new Set<string>([...currentIds, ...addedIds]);
+        return this.medicationService.checkInteractions(newMedication.id, Array.from(set));
+      })
+    ).subscribe({
+      next: (result) => {
+        const interactions = result.data?.checkInteractions ?? [];
+        const hasContra = interactions.some(i => i.riskLevel === 'CONTRAINDICATED');
+        const hasHighOrModerate = interactions.some(i => i.riskLevel === 'HIGH' || i.riskLevel === 'MODERATE');
+
+        if (hasContra) {
+          this.snackbar.openErrorSnackBar('Contraindicated interaction detected. Cannot add.');
+          this.checkingInteractions = false;
+          return;
+        }
+
+        const proceed = () => {
+          this.addedMedications.set(newMedication, quantity);
+          this.snackbar.openSnackBar('Medication added successfully', 2000);
+          medicationControl?.reset('');
+          quantityControl?.reset(1);
+          this.checkingInteractions = false;
+        };
+
+        if (hasHighOrModerate) {
+          const dialogRef = this.dialog.open(ConfirmDialog);
+          dialogRef.afterClosed().subscribe((confirmed) => {
+            if (confirmed) {
+              proceed();
+            } else {
+              this.checkingInteractions = false;
+            }
+          });
+        } else {
+          if (interactions.length > 0) {
+            this.snackbar.openSnackBar('Interactions found (LOW risk). Proceeding.', 2000);
+          }
+          proceed();
+        }
+      },
+      error: (error) => {
+        console.error('Error checking interactions:', error);
+        this.snackbar.openErrorSnackBar('Failed to check interactions');
+        this.checkingInteractions = false;
+      }
+    });
   }
 
   issuePrescription() {
@@ -178,7 +235,23 @@ export class IssuePrescriptionComponent implements OnInit {
         }
 
         if (accessCodes.length > 0) {
-          this.resetForm();
+          // After issuing prescriptions, record medications in patient info
+          const addMedicationCalls: Observable<Apollo.MutateResult<{ addMedication: any }>>[] = [];
+          this.addedMedications.forEach((_, medication: Medication) => {
+            addMedicationCalls.push(this.patientService.addMedication(patientId, medication.id));
+          });
+
+          forkJoin(addMedicationCalls).subscribe({
+            next: () => {
+              this.snackbar.openSnackBar('Patient record updated with medications', 3000);
+              this.resetForm();
+            },
+            error: (e) => {
+              console.error('Error recording medications in patient record:', e);
+              this.snackbar.openErrorSnackBar('Prescriptions issued, but failed to record medications');
+              this.resetForm();
+            }
+          });
         }
       },
       error: (err) => {
