@@ -52,6 +52,7 @@ export class LoginComponent {
           next: (result) => {
             if (result.data) {
               this.authService.setToken(rememberMe, result.data.login.token);
+              this.authService.setRefreshToken(rememberMe, result.data.login.refreshToken);
               this.router.navigate(['main']);
             } else {
               if (result.error?.message === 'Account is not verified') {

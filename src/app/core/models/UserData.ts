@@ -21,6 +21,22 @@ export interface PatientData {
     password: string
 }
 
+export interface LoginAttempt {
+    id: string
+    userId: string
+    ipAddress?: string
+    success: boolean
+    attemptDate: string
+}
+
+export interface AuditLog {
+    id: string
+    userId: string
+    ipAddress?: string
+    actionName: string
+    logDate: string
+}
+
 export enum Gender {
     MALE = 'MALE',
     FEMALE = 'FEMALE'

@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { AuthService } from '../../../core/auth/services/authService/auth.service';
+import { AuthApiService } from '../../../core/auth/services/authApi/auth-api.service';
 import { Router, RouterOutlet } from '@angular/router';
 import { Role } from '../../../core/models/UserData';
 import { AppHeaderComponent } from '../../../shared/components/app-header/app-header.component';
+import { LogoutType } from '../../../shared/utils/LogoutType';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 
 @Component({
@@ -14,8 +17,13 @@ import { AppHeaderComponent } from '../../../shared/components/app-header/app-he
 export class MainComponent {
   USER_ROLE = Role;
   userRole: Role | null = null;
+  private destroyRef = inject(DestroyRef);
 
-  constructor(private authService: AuthService, private router: Router) {};
+  constructor(
+    private authService: AuthService,
+    private authApiService: AuthApiService,
+    private router: Router
+  ) {};
 
   ngOnInit() {
     console.log("Token po zalogowaniu: " + this.authService.getToken())
@@ -39,8 +47,25 @@ export class MainComponent {
     }
   }
 
-  logout() {
-    this.authService.logout();
-    this.router.navigate([''])
+  logout(type: LogoutType) {
+    const refreshToken = this.authService.getRefreshToken();
+
+    if (type === LogoutType.LOGOUT_ALL_DEVICES && refreshToken) {
+      this.authApiService.logoutFromOtherDevices(refreshToken)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: () => {
+            this.authService.logout();
+            this.router.navigate(['']);
+          },
+          error: () => {
+            this.authService.logout();
+            this.router.navigate(['']);
+          }
+        });
+    } else {
+      this.authService.logout();
+      this.router.navigate(['']);
+    }
   }
 }

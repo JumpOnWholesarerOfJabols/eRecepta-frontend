@@ -15,11 +15,20 @@
 
       <button
         *ngIf="showLogout"
+        [matMenuTriggerFor]="logoutMenu"
         class="px-4 py-2 rounded-lg bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium transition-all duration-200 shadow-md hover:shadow-lg cursor-pointer"
-        (click)="onLogout()"
         [attr.aria-label]="logoutLabel">
         {{ logoutLabel }}
       </button>
+
+      <mat-menu #logoutMenu="matMenu">
+        <button mat-menu-item (click)="onLogout(LogoutType.LOGOUT)">
+          <span>Log out</span>
+        </button>
+        <button mat-menu-item (click)="onLogout(LogoutType.LOGOUT_ALL_DEVICES)">
+          <span>Log out from all devices</span>
+        </button>
+      </mat-menu>
     </div>
   </div>
 </header>
