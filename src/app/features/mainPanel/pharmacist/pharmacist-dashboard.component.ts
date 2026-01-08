@@ -10,6 +10,7 @@ import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } 
 import { MatProgressSpinner } from "@angular/material/progress-spinner";
 import { FulfillPrescriptionInput, Prescription } from '../../../core/models/graphql-data.model';
 import { SnackbarService } from '../../../core/services/snackbarService/snackbar.service';
+import { AuthApiService } from '../../../core/auth/services/authApi/auth-api.service';
 
 @Component({
   selector: 'app-pharmacist-dashboard',
@@ -26,8 +27,9 @@ export class PharmacistDashboardComponent implements OnInit {
   patientPrescription: Prescription | null = null;
 
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private prescriptionService: PrescriptionService,
+    private authApiService: AuthApiService,
     private snackBar: SnackbarService
   ) {
     this.verifyForm = fb.group({
@@ -51,13 +53,26 @@ export class PharmacistDashboardComponent implements OnInit {
 
     const { accessCode, patientIdentifier } = this.verifyForm.value;
 
-    this.prescriptionService.verifyPrescription(accessCode, patientIdentifier).subscribe({
+    this.authApiService.getUserId(patientIdentifier).subscribe({
       next: (value) => {
-        if (value.data?.verifyPrescription) {
-          this.patientPrescription = value.data.verifyPrescription;
+        if (value.data?.getUserId) {
+          this.prescriptionService.verifyPrescription(accessCode, value.data?.getUserId).subscribe({
+            next: (value) => {
+              if (value.data?.verifyPrescription) {
+                this.patientPrescription = value.data.verifyPrescription;
+              }
+
+              this.loading = false;
+            },
+            error: () => {
+              this.loading = false;
+            }
+          })
+        } else {
+          this.loading = false;
         }
 
-        this.loading = false;
+
       },
       error: (err) => {
         this.loading = false;
