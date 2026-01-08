@@ -1,18 +1,24 @@
 <section class="min-h-screen bg-gray-50">
-	<header class="bg-white border-b border-gray-200">
+	<header class="bg-white border-b border-gray-200 shadow-sm">
 		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
 			<div class="flex items-center space-x-3">
-				<mat-icon class="text-primary">event</mat-icon>
-				<h1 class="text-2xl sm:text-3xl font-semibold text-gray-900">Doctor Dashboard</h1>
+				<div class="p-2 rounded-lg bg-blue-50 text-blue-600">
+					<mat-icon>event</mat-icon>
+				</div>
+				<div>
+					<h1 class="text-2xl sm:text-3xl font-semibold text-gray-900">Doctor Dashboard</h1>
+					<p class="text-sm text-gray-600">Schedule, prescriptions, and patient data</p>
+				</div>
 			</div>
 		</div>
 	</header>
 
 	<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
 		<nav class="lg:col-span-3">
-			<mat-card class="shadow-sm">
+			<mat-card class="shadow-sm border border-gray-100">
 				<mat-card-header class="mb-3">
-					<mat-card-title>Actions</mat-card-title>
+					<mat-card-title class="text-lg font-semibold">Actions</mat-card-title>
+					<mat-card-subtitle class="text-sm text-gray-500">Daily tools</mat-card-subtitle>
 				</mat-card-header>
 				<mat-card-content>
 					<div class="flex flex-col space-y-3">
@@ -30,39 +36,85 @@
 						</button>
 						<button mat-flat-button color="primary" class="w-full" (click)="showIssuePrescription()">
 							<mat-icon>add_box</mat-icon>
-							<span class="ml-2">Issue Prescription</span>
+							<span class="ml-2">Issue prescription</span>
 						</button>
 						<button mat-flat-button color="primary" class="w-full" (click)="showPrescriptionHistory()">
 							<mat-icon>history</mat-icon>
-							<span class="ml-2">Prescription History</span>
-						</button>					<button mat-flat-button color="primary" class="w-full" (click)="showManagePatientInfo()">
-						<mat-icon>person_add</mat-icon>
-						<span class="ml-2">Manage Patient Info</span>
-					</button>					</div>
+							<span class="ml-2">Prescription history</span>
+						</button>
+						<button mat-flat-button color="primary" class="w-full" (click)="showManagePatientInfo()">
+							<mat-icon>person_add</mat-icon>
+							<span class="ml-2">Manage patient info</span>
+						</button>
+					</div>
 				</mat-card-content>
 			</mat-card>
 		</nav>
 
 		<main class="lg:col-span-9">
 			@if (action === ACTIONS.AVAILABILITY) {
-				<div class="space-y-4">
-					<div>
-						<app-create-availability (updateAvailabilityEvent)="updateAvailability()"></app-create-availability>
-					</div>
-					<div>
+				<mat-card class="shadow-sm border border-gray-100 space-y-4">
+					<mat-card-header class="mb-2">
+						<mat-card-title class="text-lg font-semibold">Availability</mat-card-title>
+						<mat-card-subtitle class="text-sm text-gray-500">Create and review your slots</mat-card-subtitle>
+					</mat-card-header>
+					<mat-card-content class="flex flex-col gap-4">
+						<div class="mb-6">
+							<app-create-availability (updateAvailabilityEvent)="updateAvailability()"></app-create-availability>
+						</div>
 						<app-show-availability [reload$]="reload$"></app-show-availability>
-					</div>
-				</div>
+					</mat-card-content>
+				</mat-card>
 			} @else if (action === ACTIONS.MANAGE_SPECIALIZATION) {
-				<app-manage-specialization></app-manage-specialization>
+				<mat-card class="shadow-sm border border-gray-100">
+					<mat-card-header class="mb-2">
+						<mat-card-title class="text-lg font-semibold">Specializations</mat-card-title>
+						<mat-card-subtitle class="text-sm text-gray-500">Update your expertise</mat-card-subtitle>
+					</mat-card-header>
+					<mat-card-content>
+						<app-manage-specialization></app-manage-specialization>
+					</mat-card-content>
+				</mat-card>
 			} @else if (action === ACTIONS.APPOINTMENTS) {
-				<app-doctor-appointment-list></app-doctor-appointment-list>
+				<mat-card class="shadow-sm border border-gray-100">
+					<mat-card-header class="mb-2">
+						<mat-card-title class="text-lg font-semibold">Appointments</mat-card-title>
+						<mat-card-subtitle class="text-sm text-gray-500">Review upcoming visits</mat-card-subtitle>
+					</mat-card-header>
+					<mat-card-content>
+						<app-doctor-appointment-list></app-doctor-appointment-list>
+					</mat-card-content>
+				</mat-card>
 			} @else if (action === ACTIONS.ISSUE_PRESCRIPTION) {
-				<app-issue-prescription></app-issue-prescription>
+				<mat-card class="shadow-sm border border-gray-100">
+					<mat-card-header class="mb-2">
+						<mat-card-title class="text-lg font-semibold">Issue prescription</mat-card-title>
+						<mat-card-subtitle class="text-sm text-gray-500">Create a new e-prescription</mat-card-subtitle>
+					</mat-card-header>
+					<mat-card-content>
+						<app-issue-prescription></app-issue-prescription>
+					</mat-card-content>
+				</mat-card>
 			} @else if (action === ACTIONS.PRESCRIPTION_HISTORY) {
-				<app-prescription-list></app-prescription-list>
+				<mat-card class="shadow-sm border border-gray-100">
+					<mat-card-header class="mb-2">
+						<mat-card-title class="text-lg font-semibold">Prescription history</mat-card-title>
+						<mat-card-subtitle class="text-sm text-gray-500">Past prescriptions</mat-card-subtitle>
+					</mat-card-header>
+					<mat-card-content>
+						<app-prescription-list></app-prescription-list>
+					</mat-card-content>
+				</mat-card>
 			} @else if (action === ACTIONS.MANAGE_PATIENT_INFO) {
-				<app-manage-patient-info></app-manage-patient-info>
+				<mat-card class="shadow-sm border border-gray-100">
+					<mat-card-header class="mb-2">
+						<mat-card-title class="text-lg font-semibold">Patient info</mat-card-title>
+						<mat-card-subtitle class="text-sm text-gray-500">Update patient records</mat-card-subtitle>
+					</mat-card-header>
+					<mat-card-content>
+						<app-manage-patient-info></app-manage-patient-info>
+					</mat-card-content>
+				</mat-card>
 			}
 		</main>
 	</div>
