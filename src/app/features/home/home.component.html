@@ -1,10 +1,111 @@
-<div class="flex flex-col min-h-screen bg-gray-100">
-  <div class="flex justify-center items-center h-20">
-    <h1 class="text-2xl">ERECEPTA</h1>
-  </div>
-  <div class="flex grow justify-center">
-    <div class="p-4 shadow-lg rounded-lg bg-white w-full lg:w-2/5 mb-6">
-      <router-outlet></router-outlet>
+<div class="min-h-screen bg-linear-to-br from-blue-50 via-white to-indigo-50 relative">
+
+  <app-shared-header subtitle="Electronic prescriptions system"></app-shared-header>
+
+  <!-- Main Content -->
+  <main class="relative z-10 container mx-auto px-4 py-8 lg:py-16">
+    <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
+      <!-- Left Side - Hero Content -->
+      <div class="flex-1 text-center lg:text-left space-y-6">
+        <div class="inline-block">
+          <span class="inline-flex items-center px-4 py-2 rounded-full bg-blue-100 text-blue-700 text-sm font-semibold shadow-sm">
+            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+            </svg>
+            Secure and modern
+          </span>
+        </div>
+        
+        <h2 class="text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight">
+          Manage prescriptions
+          <span class="bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent block mt-2">
+            the digital way
+          </span>
+        </h2>
+        
+        <p class="text-lg lg:text-xl text-gray-600 leading-relaxed max-w-2xl">
+          A modern electronic prescription system providing fast, secure, and convenient access to your medications. 
+          For patients, doctors, and pharmacies.
+        </p>
+
+        <!-- Features Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-8">
+          <div class="flex items-start space-x-3 p-4 rounded-xl bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all">
+            <div class="shrink-0 w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900">Security</h3>
+              <p class="text-sm text-gray-600">Encrypted data</p>
+            </div>
+          </div>
+
+          <div class="flex items-start space-x-3 p-4 rounded-xl bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all">
+            <div class="shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900">Speed</h3>
+              <p class="text-sm text-gray-600">Instant access</p>
+            </div>
+          </div>
+
+          <div class="flex items-start space-x-3 p-4 rounded-xl bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-all">
+            <div class="shrink-0 w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900">Mobility</h3>
+              <p class="text-sm text-gray-600">Anywhere, anytime</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Side - Login Form -->
+      <div class="flex-1 w-full max-w-md lg:max-w-lg">
+        <div class="bg-white rounded-2xl shadow-lg p-8 lg:p-10 border border-gray-100">
+
+          <router-outlet></router-outlet>
+        </div>
+
+      
+      </div>
     </div>
-  </div>
+
+    <!-- Stats Section -->
+    <div class="mt-20 lg:mt-32">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+        <div class="p-6 rounded-xl bg-white/60 backdrop-blur-sm shadow-sm">
+          <div class="text-3xl lg:text-4xl font-bold text-blue-600 mb-2">10k+</div>
+          <div class="text-sm lg:text-base text-gray-600">Active users</div>
+        </div>
+        <div class="p-6 rounded-xl bg-white/60 backdrop-blur-sm shadow-sm">
+          <div class="text-3xl lg:text-4xl font-bold text-indigo-600 mb-2">50k+</div>
+          <div class="text-sm lg:text-base text-gray-600">Prescriptions issued</div>
+        </div>
+        <div class="p-6 rounded-xl bg-white/60 backdrop-blur-sm shadow-sm">
+          <div class="text-3xl lg:text-4xl font-bold text-purple-600 mb-2">24/7</div>
+          <div class="text-sm lg:text-base text-gray-600">System availability</div>
+        </div>
+        <div class="p-6 rounded-xl bg-white/60 backdrop-blur-sm shadow-sm">
+          <div class="text-3xl lg:text-4xl font-bold text-green-600 mb-2">99.9%</div>
+          <div class="text-sm lg:text-base text-gray-600">Customer satisfaction</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="relative z-10 mt-20 py-8 border-t border-gray-200 bg-white/60 backdrop-blur-sm">
+    <div class="container mx-auto px-4 text-center text-gray-600 text-sm">
+      <p>&copy; 2026 eRecepta. All rights reserved.</p>
+    </div>
+  </footer>
 </div>

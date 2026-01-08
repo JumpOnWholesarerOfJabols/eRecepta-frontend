@@ -16,8 +16,19 @@ export class AuthService {
       sessionStorage.setItem('token', token);
   }
 
+  setRefreshToken(rememberMe: boolean, refreshToken: string) {
+    if (rememberMe)
+      localStorage.setItem('refreshToken', refreshToken);
+    else
+      sessionStorage.setItem('refreshToken', refreshToken);
+  }
+
   getToken(): string | null {
     return localStorage.getItem('token') || sessionStorage.getItem('token');
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refreshToken') || sessionStorage.getItem('refreshToken');
   }
 
   // getUser(): any {
@@ -34,6 +45,8 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('token');
     sessionStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    sessionStorage.removeItem('refreshToken');
     localStorage.removeItem('user');
     sessionStorage.removeItem('user');
   }
@@ -66,3 +79,4 @@ export class AuthService {
   }
 }
 }
+

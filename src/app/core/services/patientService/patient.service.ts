@@ -148,4 +148,114 @@ export class PatientService {
       }
     });
   }
+
+  addAllergy(userId: string, allergy: string): Observable<ApolloClient.MutateResult<{ addAllergy: PatientInfo }>> {
+    const mutation = gql`
+      mutation AddAllergy($userId: ID!, $allergy: String!) {
+        addAllergy(userId: $userId, allergy: $allergy) {
+          userId
+          bloodType
+          height
+          weight
+          allergies
+          chronicDiseases
+          medications
+          emergencyContact
+        }
+      }
+    `;
+
+    return this.apollo.use('patientRecord').mutate<{ addAllergy: PatientInfo }>({
+      mutation,
+      variables: { userId, allergy }
+    });
+  }
+
+  removeAllergy(userId: string, allergy: string): Observable<ApolloClient.MutateResult<{ removeAllergy: PatientInfo }>> {
+    const mutation = gql`
+      mutation RemoveAllergy($userId: ID!, $allergy: String!) {
+        removeAllergy(userId: $userId, allergy: $allergy) {
+          userId
+          bloodType
+          height
+          weight
+          allergies
+          chronicDiseases
+          medications
+          emergencyContact
+        }
+      }
+    `;
+
+    return this.apollo.use('patientRecord').mutate<{ removeAllergy: PatientInfo }>({
+      mutation,
+      variables: { userId, allergy }
+    });
+  }
+
+  addChronicDisease(userId: string, disease: string): Observable<ApolloClient.MutateResult<{ addChronicDisease: PatientInfo }>> {
+    const mutation = gql`
+      mutation AddChronicDisease($userId: ID!, $disease: String!) {
+        addChronicDisease(userId: $userId, disease: $disease) {
+          userId
+          bloodType
+          height
+          weight
+          allergies
+          chronicDiseases
+          medications
+          emergencyContact
+        }
+      }
+    `;
+
+    return this.apollo.use('patientRecord').mutate<{ addChronicDisease: PatientInfo }>({
+      mutation,
+      variables: { userId, disease }
+    });
+  }
+
+  removeChronicDisease(userId: string, disease: string): Observable<ApolloClient.MutateResult<{ removeChronicDisease: PatientInfo }>> {
+    const mutation = gql`
+      mutation RemoveChronicDisease($userId: ID!, $disease: String!) {
+        removeChronicDisease(userId: $userId, disease: $disease) {
+          userId
+          bloodType
+          height
+          weight
+          allergies
+          chronicDiseases
+          medications
+          emergencyContact
+        }
+      }
+    `;
+
+    return this.apollo.use('patientRecord').mutate<{ removeChronicDisease: PatientInfo }>({
+      mutation,
+      variables: { userId, disease }
+    });
+  }
+
+  addMedication(userId: string, medicationId: string): Observable<ApolloClient.MutateResult<{ addMedication: PatientInfo }>> {
+    const mutation = gql`
+      mutation AddMedication($userId: ID!, $medicationId: ID!) {
+        addMedication(userId: $userId, medicationId: $medicationId) {
+          userId
+          bloodType
+          height
+          weight
+          allergies
+          chronicDiseases
+          medications
+          emergencyContact
+        }
+      }
+    `;
+
+    return this.apollo.use('patientRecord').mutate<{ addMedication: PatientInfo }>({
+      mutation,
+      variables: { userId, medicationId }
+    });
+  }
 }

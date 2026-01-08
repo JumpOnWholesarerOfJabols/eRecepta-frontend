@@ -1,4 +1,4 @@
-import { User } from "./UserData";
+import { User, LoginAttempt, AuditLog } from "./UserData";
 
 export enum DayOfWeek {
   SUNDAY = 'SUNDAY',
@@ -15,6 +15,21 @@ export interface LoginResponse {
   login: {
     token: string;
     expiresAt: string;
+    refreshToken: string;
+  }
+}
+
+export interface AuthTokenResponse {
+  token: string;
+  expiresAt: string;
+  refreshToken: string;
+}
+
+export interface RefreshTokenResponse {
+  refreshToken: {
+    token: string;
+    expiresAt: string;
+    refreshToken: string;
   }
 }
 

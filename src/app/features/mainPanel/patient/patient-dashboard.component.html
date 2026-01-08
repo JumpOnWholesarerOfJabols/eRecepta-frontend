@@ -1,10 +1,15 @@
 <section class="min-h-screen bg-gray-50">
   <!-- Header / Hero -->
-  <header class="bg-white border-b border-gray-200">
+  <header class="bg-white border-b border-gray-200 shadow-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
       <div class="flex items-center space-x-3">
-        <mat-icon class="text-primary">health_and_safety</mat-icon>
-        <h1 class="text-2xl sm:text-3xl font-semibold text-gray-900">Patient Dashboard</h1>
+        <div class="p-2 rounded-lg bg-blue-50 text-blue-600">
+          <mat-icon>health_and_safety</mat-icon>
+        </div>
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-semibold text-gray-900">Patient Dashboard</h1>
+          <p class="text-sm text-gray-600">Manage visits, history, and appointments</p>
+        </div>
       </div>
     </div>
   </header>
@@ -13,9 +18,10 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
     <!-- Sidebar actions -->
     <nav class="lg:col-span-3">
-      <mat-card class="shadow-sm">
+      <mat-card class="shadow-sm border border-gray-100">
         <mat-card-header class="mb-3">
-          <mat-card-title>Actions</mat-card-title>
+          <mat-card-title class="text-lg font-semibold">Actions</mat-card-title>
+          <mat-card-subtitle class="text-sm text-gray-500">Your shortcuts</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <div class="flex flex-col space-y-3">
@@ -39,35 +45,40 @@
     @if (action === ACTIONS.SHOW_HISTORY) {
     <!-- Medical History -->
     <main class="lg:col-span-9">
-      <div class="">
-        <mat-card-header class="mb-3">
-          <mat-card-title>Medical History</mat-card-title>
+      <mat-card class="shadow-sm border border-gray-100">
+        <mat-card-header class="mb-2">
+          <mat-card-title class="text-lg font-semibold">Medical history</mat-card-title>
+          <mat-card-subtitle class="text-sm text-gray-500">Your past prescriptions and visits</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
           <app-patient-history></app-patient-history>
         </mat-card-content>
-      </div>
+      </mat-card>
     </main>
     } @else if (action === ACTIONS.MAKE_APPOINTMENT) {
     <!-- Make Appointment -->
     <main class="lg:col-span-9">
-      <div class="">
-        <mat-card-header class="mb-3">
-          <mat-card-title>Book an Appointment</mat-card-title>
+      <mat-card class="shadow-sm border border-gray-100">
+        <mat-card-header class="mb-2">
+          <mat-card-title class="text-lg font-semibold">Book an appointment</mat-card-title>
+          <mat-card-subtitle class="text-sm text-gray-500">Choose a slot and confirm</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-          <!-- Appointment booking form will be displayed here -->
           <app-appointment></app-appointment>
         </mat-card-content>
-      </div>
+      </mat-card>
     </main>
     } @else if (action === ACTIONS.SHOW_APPOINTMENTS) {
       <main class="lg:col-span-9">
-      <div class="">
-        <mat-card-content>
-          <app-appointment-list></app-appointment-list>
-        </mat-card-content>
-      </div>
+        <mat-card class="shadow-sm border border-gray-100">
+          <mat-card-header class="mb-2">
+            <mat-card-title class="text-lg font-semibold">My appointments</mat-card-title>
+            <mat-card-subtitle class="text-sm text-gray-500">Upcoming and past bookings</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <app-appointment-list></app-appointment-list>
+          </mat-card-content>
+        </mat-card>
     </main>
     }
     @else {
