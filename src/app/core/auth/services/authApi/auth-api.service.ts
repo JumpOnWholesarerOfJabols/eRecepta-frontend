@@ -6,13 +6,14 @@ import { PatientData } from '../../../models/UserData';
 import { MutationResponse } from '../../../models/graphql-data.model';
 import { LoginResponse, UniversalResponse, RefreshTokenResponse } from '../../../models/ResponseData';
 import { ApolloClient } from '@apollo/client';
+import { AuthService } from '../authService/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthApiService {
 
-  constructor(private apollo: Apollo) { }
+  constructor(private apollo: Apollo, private authService: AuthService) { }
 
   login(loginData: LoginData): Observable<ApolloClient.MutateResult<LoginResponse>> {
     return this.apollo.use('auth').mutate({
@@ -159,6 +160,20 @@ export class AuthApiService {
     })
   }
 
+  getUserId(identifier: string) {
+    const query = gql`
+      query GetUserId($identifier: String!) {
+        getUserId(identifier: $identifier)
+      }
+    `
+    return this.apollo.use('auth').query<{getUserId: string}>({
+      query,
+      variables: {
+        identifier
+      }
+    })
+  }
+
   getMyLoginAttempts(): Observable<ApolloClient.MutateResult> {
     return this.apollo.use('auth').query({
       query: gql`
@@ -190,4 +205,6 @@ export class AuthApiService {
       `
     })
   }
-}
+
+} 
+
