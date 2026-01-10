@@ -77,7 +77,6 @@ export class LoginComponent {
           }
         })
     } else {
-      console.log("Blad danych")
     }
   }
 }

@@ -16,7 +16,6 @@ export class ErrorHandlerService {
     message: string,
     validationErrors?: { [field: string]: string }
   ): void {
-    console.log('Handling GraphQL error:', { errorCode, message, validationErrors });
 
     if (errorCode === 'MultiFieldValidationException' && validationErrors) {
       this.handleValidationErrors(validationErrors);
@@ -34,7 +33,6 @@ export class ErrorHandlerService {
   }
 
   handleNetworkError(error: any): void {
-    console.log('Handling network error:', error);
     
     // Check for 401 Unauthorized
     if (error?.status === 401 || error?.error?.status === 401 || 
@@ -54,7 +52,6 @@ export class ErrorHandlerService {
   }
 
   private handleValidationErrors(errors: { [field: string]: string }): void {
-    console.log('Validation errors:', errors);
     const errorArray = Object.values(errors);
 
     this.snackBar.openErrorSnackBar(errorArray);
@@ -75,11 +72,9 @@ export class ErrorHandlerService {
    private handleSpecificErrors(errorCode: string): void {
     switch (errorCode) {
       case 'AccountVerificationException':
-        console.log('→ Redirecting to verification page');
         break;
 
       case 'InvalidCredentialsException':
-        console.log('→ Invalid credentials, clearing sensitive data');
         break;
     }
   }

@@ -14,8 +14,9 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatButtonModule } from "@angular/material/button";
 import { formatDate } from '../../../../shared/utils/dateFormatter';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, forkJoin, of } from 'rxjs';
+import { map, startWith, switchMap } from 'rxjs/operators';
+import { AuthApiService } from '../../../../core/auth/services/authApi/auth-api.service';
 
 @Component({
   selector: 'app-doctor-appointment-list',
@@ -59,18 +60,45 @@ export class DoctorAppointmentListComponent implements OnInit {
   constructor(
     private doctorService: DoctorService,
     private authService: AuthService,
-    private snackBar: SnackbarService
+    private snackBar: SnackbarService,
+    private authApiService: AuthApiService
   ) {}
 
   ngOnInit() {
     const doctorId = this.authService.getUserId();
-    this.doctorService.getAppointments().subscribe({
-      next: (result) => {
-        const all = result.data?.findAllVisits ?? [];
-        const filtered = doctorId ? all.filter(v => v.doctorId === doctorId) : all;
-        this.visitsSubject.next(filtered);
-      }
-    });
+    this.doctorService.getAppointments()
+      .pipe(
+        switchMap((result) => {
+          const all = result.data?.findAllVisits ?? [];
+          const filtered = doctorId ? all.filter(v => v.doctorId === doctorId) : all;
+          
+          if (filtered.length === 0) {
+            return of(filtered);
+          }
+          
+          return forkJoin(
+            filtered.map(visit =>
+              this.authApiService.getUserInfo(visit.patientId).pipe(
+                map(userResult => ({
+                  ...visit,
+                  patientFirstName: userResult.data?.getUserInfo?.firstName ?? '',
+                  patientLastName: userResult.data?.getUserInfo?.lastName ?? '',
+                  patientPesel: userResult.data?.getUserInfo?.pesel ?? visit.patientId
+                }))
+              )
+            )
+          );
+        })
+      )
+      .subscribe({
+        next: (visitsWithPatientInfo) => {
+          this.visitsSubject.next(visitsWithPatientInfo);
+        },
+        error: (err) => {
+          console.error('Error loading appointments:', err);
+          this.snackBar.openErrorSnackBar('Failed to load appointments');
+        }
+      });
   }
 
   cancelVisit(id: string) {

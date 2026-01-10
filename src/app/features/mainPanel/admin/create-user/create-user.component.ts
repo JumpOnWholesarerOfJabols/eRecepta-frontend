@@ -89,7 +89,6 @@ export class CreateUserComponent {
           });
         } else {
           this.snackbar.openSnackBar(result.data?.createUser?.message!);
-          console.log(result.data?.createUser?.message)
         }
       },
       error: (err) => {
