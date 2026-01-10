@@ -90,7 +90,7 @@ export class PharmacistDashboardComponent implements OnInit {
     const { quantity } = this.fulfillForm.value;
 
 
-    if (quantity < this.patientPrescription?.totalPackages!) {
+    if (quantity <= this.patientPrescription?.totalPackages!) {
       const input: FulfillPrescriptionInput = {
         prescriptionId: this.patientPrescription?.id!,
         quantity: quantity
@@ -104,9 +104,12 @@ export class PharmacistDashboardComponent implements OnInit {
           }
         },
         error: (err) => {
-
+          this.snackBar.openErrorSnackBar('Error while fulfilling!!!')
         }
       })
+    } else {
+      this.snackBar.openErrorSnackBar('Wrong quantity!')
+      return;
     }
   }
 
