@@ -9,8 +9,10 @@ import { SnackbarService } from '../../../../core/services/snackbarService/snack
 import { PatientHistoryEntry, RevisionType, BloodType, PatientInfo, PrescriptionStatus } from '../../../../core/models/graphql-data.model';
 import { AuthService } from '../../../../core/auth/services/authService/auth.service';
 import { PrescriptionService } from '../../../../core/services/prescriptionService/prescription.service';
-import { finalize, forkJoin } from 'rxjs';
+import { finalize, forkJoin, of } from 'rxjs';
 import { Prescription } from '../../../../core/models/graphql-data.model';
+import { MedicationService } from '../../../../core/services/medicationService/medication.service';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-patient-history',
@@ -31,7 +33,8 @@ export class PatientHistoryComponent implements OnInit {
     private patientService: PatientService,
     private snackBar: SnackbarService,
     private authService: AuthService,
-    private prescriptionService: PrescriptionService
+    private prescriptionService: PrescriptionService,
+    private medicationService: MedicationService
   ) { }
 
   ngOnInit(): void {
@@ -42,38 +45,39 @@ export class PatientHistoryComponent implements OnInit {
     this.loading = true;
     const userId = this.authService.getUserId() ?? '';
 
+    const record$ = this.patientService
+      .getPatientRecord(userId)
+      .pipe(map(res => res.data?.getPatientRecordByUserId ?? null));
 
-    this.patientService.getPatientRecord(userId).subscribe({
-      next: (result) => {
-            console.log("idd:" + result.data?.getPatientRecordByUserId)
-        if (result.data?.getPatientRecordByUserId) {
-          this.patientInfo = result.data.getPatientRecordByUserId;
-        }
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Error loading patient history:', error);
-        this.loading = false;
-      }
-    });
+    const prescriptions$ = this.prescriptionService.getPrescriptions(userId);
 
-    forkJoin({
-      record: this.patientService.getPatientRecord(userId),
-      prescription: this.prescriptionService.getPrescriptions(this.authService.getUserId() ?? '')
-    }).pipe(
-      finalize(() => this.loading = false)
-    )
-    .subscribe({
-      next: (value) => {
-        if(value.prescription.data?.prescriptions && value.record.data?.getPatientRecordByUserId) {
-          this.patientInfo = value.record.data.getPatientRecordByUserId;
-          this.patientPrescritpions = value.prescription.data?.prescriptions
-        }
-      },
-      error: (err) => {
-        this.snackBar.openErrorSnackBar('unknown error')
-      }
-    })
+    forkJoin({ record: record$, prescriptions: prescriptions$ })
+      .pipe(
+        switchMap(({ record, prescriptions }) => {
+          if (record && Array.isArray(record.medications) && record.medications.length) {
+            return forkJoin(
+              record.medications.map(id =>
+                this.medicationService
+                  .medication(id)
+                  .pipe(map(res => res.data?.medication?.tradeName ?? id))
+              )
+            ).pipe(
+              map(names => ({ record: { ...record, medications: names }, prescriptions }))
+            );
+          }
+          return of({ record, prescriptions });
+        }),
+        finalize(() => (this.loading = false))
+      )
+      .subscribe({
+        next: ({ record, prescriptions }) => {
+          if (record) {
+            this.patientInfo = record;
+          }
+          this.patientPrescritpions = prescriptions.data?.prescriptions ?? [];
+        },
+        error: () => this.snackBar.openErrorSnackBar('unknown error'),
+      });
   }
 
 }

@@ -103,7 +103,6 @@ export class AppointmentComponent {
     this.patientService.createVisit(visitData).subscribe({
       next: (value) => {
         if(value.data?.createVisit) {
-          console.log("wiztya!" + value.data);
           this.snackbar.openSnackBar('Appointment made successfully')
           this.appointmentForm.reset();
           this.appointmentForm.markAsPristine();

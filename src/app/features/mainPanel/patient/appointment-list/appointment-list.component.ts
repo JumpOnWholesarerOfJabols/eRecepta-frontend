@@ -28,7 +28,6 @@ export class AppointmentListComponent implements OnInit {
   ngOnInit() {
     this.patientService.getAppointments().subscribe({
       next: (result) => {
-        console.log(result.data?.findAllVisits!)
         this.visits = result.data?.findAllVisits!
       }
     })

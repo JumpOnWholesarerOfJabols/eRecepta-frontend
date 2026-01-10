@@ -36,7 +36,6 @@ export class AdminDashboardComponent implements OnInit {
     action: ACTIONS = ACTIONS.SHOW_USERS; 
 
     ngOnInit() {
-        console.log("b: " + this.authS.getToken())
         this.fetchAllUsers();
     }
 
@@ -51,7 +50,6 @@ export class AdminDashboardComponent implements OnInit {
     }
 
     deleteUser(id: String) {
-        console.log('delete???')
         this.adminService.deleteUser(id).subscribe({
             next: (result) => {
                 if(result.data?.deleteUser.success) {
@@ -62,7 +60,6 @@ export class AdminDashboardComponent implements OnInit {
                 }
             },
             error: (err) => {
-                console.log('Error unknown')
             }
         })
     }
@@ -70,7 +67,6 @@ export class AdminDashboardComponent implements OnInit {
     fetchAllUsers() {
         this.adminService.getAllUsers().subscribe({
             next: (value) => {
-                console.log('usery: ' + value.data?.getAllUsers[0].email);
                 if(value.data && Array.isArray(value.data.getAllUsers)) {
                     this.allUsers = value.data.getAllUsers;
                 } else {

@@ -3,7 +3,7 @@ import { Apollo, gql } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { LoginData, ResetPasswordData, VerificationData } from '../../models/CredentialsData';
 import { PatientData } from '../../../models/UserData';
-import { MutationResponse } from '../../../models/graphql-data.model';
+import { MutationResponse, UserAccount } from '../../../models/graphql-data.model';
 import { LoginResponse, UniversalResponse, RefreshTokenResponse } from '../../../models/ResponseData';
 import { ApolloClient } from '@apollo/client';
 import { AuthService } from '../authService/auth.service';
@@ -170,6 +170,31 @@ export class AuthApiService {
       query,
       variables: {
         identifier
+      }
+    })
+  }
+
+  getUserInfo(id: string) {
+    const query = gql`
+      query GetUserInfo($id: String!) {
+        getUserInfo(id: $id) {
+          id
+          email
+          pesel
+          firstName
+          lastName
+          phoneNumber
+          dateOfBirth
+          role
+          userGender
+          verified
+        }
+      }
+    `
+    return this.apollo.use('auth').query<{getUserInfo: UserAccount}>({
+      query,
+      variables: {
+        id
       }
     })
   }
