@@ -53,15 +53,12 @@ export class RegisterComponent {
 
   register() {
     this.registerForm.markAllAsTouched();
-console.log(this.registerForm.valid)
     if (this.registerForm.valid) {
-      console.log("valid xd")
       const { acceptPolicy, ...newUserData } = this.registerForm.getRawValue();
       this.authApiService.registerUser(newUserData)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (result) => {
-          console.log(result);
 
         if (result.data) {
           this.snackBar.openSnackBar('Account created! Enter your verification code');
@@ -75,7 +72,6 @@ console.log(this.registerForm.valid)
         },
         error: (err) => {
           this.snackBar.openErrorSnackBar('Error while signing up. Try again later');
-          console.log(err);
         },
       })
     }

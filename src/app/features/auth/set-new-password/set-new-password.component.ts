@@ -64,7 +64,6 @@ export class SetNewPasswordComponent {
 
         },
         error: (err) => {
-          console.log(err)
           this.snackBar.openErrorSnackBar('Failed to set new password');
         }
       })

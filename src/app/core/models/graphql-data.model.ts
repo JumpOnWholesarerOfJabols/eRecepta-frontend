@@ -102,6 +102,19 @@ export interface IssuedPrescriptionsResult {
   prescription: Prescription;
 }
 
+export interface UserAccount {
+  id: string;
+  email: string;
+  pesel: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber?: string;
+  dateOfBirth: string;
+  role: string;
+  userGender: string;
+  verified: boolean;
+}
+
 export interface Visit {
   id: string;
   doctorId: string;
@@ -109,6 +122,9 @@ export interface Visit {
   specialization: Specialization;
   visitTime?: string;
   visitStatus?: VisitStatus;
+  patientFirstName?: string;
+  patientLastName?: string;
+  patientPesel?: string;
 }
 
 export interface CreateVisitInput {

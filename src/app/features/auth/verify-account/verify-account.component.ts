@@ -57,7 +57,6 @@ export class VerifyAccountComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (result) => {
-          console.log(result.error)
           if(result.data) {
             this.snackBar.openSnackBar('Account verified!');
             this.router.navigate([''])
@@ -66,7 +65,6 @@ export class VerifyAccountComponent {
           }
         },
         error: (err) => {
-          console.log(err)
           this.snackBar.openSnackBar('Failed to verify your account');
 
         }

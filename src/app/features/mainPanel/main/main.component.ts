@@ -26,9 +26,6 @@ export class MainComponent {
   ) {};
 
   ngOnInit() {
-    console.log("Token po zalogowaniu: " + this.authService.getToken())
-    console.log('czy zalogowany: ', this.authService.isLoggedIn())
-
     this.userRole = this.authService.getUserRole();
     if (!this.authService.isLoggedIn() || !this.userRole) {
       this.router.navigate(['']);
