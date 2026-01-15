@@ -9,8 +9,8 @@ import { AuthService } from '../auth/services/authService/auth.service';
 import { ErrorLinkFactory } from './apollo-ErrorLinkFactory';
 import { LoadingLinkFactory } from './apollo-LoadingLinkFactory';
 
-const prevURL = 'http://localhost:12000/graphql';
-const BASE_URL = 'http://localhost:21371';
+const prevURL = 'https://api.jawolh-erecepta.pl/auth/graphql';
+const BASE_URL = 'https://api.jawolh-erecepta.pl';
 
 const createClientConfig = (uri: string) => {
   const httpLink = inject(HttpLink);
